@@ -4,8 +4,8 @@ import Logo from '@/assets/images/logo-circle.png'
 import CustomInput from '@/components/CustomInput'
 import CustomButton from '@/components/CustomButton'
 
-const ConfirmSignUpScreen = () => {
-  const [codeConfirmation, setCodeConfirmation] = useState('')
+const ResetPasswordScreen = () => {
+  const [email, setEmail] = useState('')
 
   const { height } = useWindowDimensions()
    
@@ -23,14 +23,12 @@ const ConfirmSignUpScreen = () => {
         <Image source={Logo} style={[styles.logo, { height: height * 0.5 }]} resizeMode="contain" /> 
 
         <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Nova Ardiansyah</Text>
-        <Text style={{ marginBottom: 20 }}>Konfirmasi Akun</Text>
+        <Text style={{ marginBottom: 20 }}>Lupa Password</Text>
 
-        <CustomInput placeholder="Kode Konfirmasi" value={codeConfirmation} setValue={setCodeConfirmation} keyboardType="numeric" />
-        <Text style={styles.text}>Kode konfirmasi telah dikirim ke email Anda</Text>
+        <CustomInput placeholder="Alamat Email" value={email} setValue={setEmail} />
+        <Text style={styles.text}>Kode konfirmasi akan dikirim ke email Anda</Text>
 
-        <CustomButton style={{ marginTop: 10 }} text="Konfirmasi" onPress={onSignUpPressed} />
-
-        <CustomButton style={{ marginTop: 10 }} text="Kirim ulang kode" onPress={onSignUpPressed} variant="secondary" />
+        <CustomButton style={{ marginTop: 10 }} text="Kirim Kode" onPress={onSignUpPressed} />
 
         <CustomButton style={{ marginTop: 5 }} text="Sudah punya akun? Masuk" onPress={onSignInPressed} variant="tertiary" />
       </View>
@@ -66,4 +64,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default ConfirmSignUpScreen
+export default ResetPasswordScreen

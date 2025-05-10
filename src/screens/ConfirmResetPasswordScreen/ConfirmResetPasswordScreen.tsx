@@ -4,8 +4,10 @@ import Logo from '@/assets/images/logo-circle.png'
 import CustomInput from '@/components/CustomInput'
 import CustomButton from '@/components/CustomButton'
 
-const ConfirmSignUpScreen = () => {
+const ConfirmResetPasswordScreen = () => {
   const [codeConfirmation, setCodeConfirmation] = useState('')
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmNewPassword, setConfirmNewPassword] = useState('')
 
   const { height } = useWindowDimensions()
    
@@ -27,8 +29,12 @@ const ConfirmSignUpScreen = () => {
 
         <CustomInput placeholder="Kode Konfirmasi" value={codeConfirmation} setValue={setCodeConfirmation} keyboardType="numeric" />
         <Text style={styles.text}>Kode konfirmasi telah dikirim ke email Anda</Text>
+        
+        <CustomInput placeholder="New Password" value={newPassword} setValue={setNewPassword} secureTextEntry />
+        
+        <CustomInput placeholder="Repeat New Password" value={confirmNewPassword} setValue={setConfirmNewPassword} secureTextEntry />
 
-        <CustomButton style={{ marginTop: 10 }} text="Konfirmasi" onPress={onSignUpPressed} />
+        <CustomButton style={{ marginTop: 10 }} text="Reset Password" onPress={onSignUpPressed} />
 
         <CustomButton style={{ marginTop: 10 }} text="Kirim ulang kode" onPress={onSignUpPressed} variant="secondary" />
 
@@ -66,4 +72,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default ConfirmSignUpScreen
+export default ConfirmResetPasswordScreen
