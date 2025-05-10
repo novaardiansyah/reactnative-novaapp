@@ -6,9 +6,10 @@ type CustomInputProps = {
   setValue: (value: string) => void
   placeholder: string
   secureTextEntry?: boolean
+  keyboardType?: 'default' | 'numeric'
 }
 
-const CustomInput = ({ value, setValue, placeholder, secureTextEntry = false }: CustomInputProps) => {
+const CustomInput = ({ value, setValue, placeholder, secureTextEntry = false, keyboardType = 'default' }: CustomInputProps) => {
   return (
     <View style={styles.container}>
       <TextInput 
@@ -17,6 +18,7 @@ const CustomInput = ({ value, setValue, placeholder, secureTextEntry = false }: 
         value={value}
         onChangeText={setValue}
         secureTextEntry={secureTextEntry}
+        keyboardType={keyboardType}
       />
     </View>
   )

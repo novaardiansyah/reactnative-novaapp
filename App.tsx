@@ -1,11 +1,15 @@
 import React from 'react'
 import { SafeAreaView, StyleSheet, Text } from 'react-native'
 import SignInScreen from './src/screens/SignInScreen'
+import SignUpScreen from '@/screens/SignUpScreen'
+import ConfirmSignUpScreen from '@/screens/ConfirmSignUpScreen'
 
 const App = () => {
   return (
     <SafeAreaView style={styles.root}>
-       <SignInScreen />
+       {/* <SignInScreen /> */}
+       {/* <SignUpScreen /> */}
+       <ConfirmSignUpScreen />
     </SafeAreaView>
   )
 }
