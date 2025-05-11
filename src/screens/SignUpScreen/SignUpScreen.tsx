@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
-import { View, Image, StyleSheet, useWindowDimensions, Text, ScrollView } from 'react-native'
-import Logo from '@/assets/images/logo-circle.png'
+import { View, StyleSheet, useWindowDimensions, Text, ScrollView } from 'react-native'
 import CustomInput from '@/components/CustomInput'
 import CustomButton from '@/components/CustomButton'
+import { useNavigation } from '@react-navigation/native'
+import CustomAuthHeader from '@/components/CustomAuthHeader'
 
 const SignUpScreen = () => {
+  const navigation = useNavigation()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [passwordRepeat, setPasswordRepeat] = useState('')
@@ -12,20 +14,17 @@ const SignUpScreen = () => {
   const { height } = useWindowDimensions()
    
   const onSignUpPressed = () => {
-    console.warn('Sign up')
+    navigation.navigate('ConfirmSignUp' as never)
   }
 
   const onSignInPressed = () => {
-    console.warn('Sign in')
+    navigation.navigate('SignIn' as never)
   }
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={[styles.root, { marginTop: -(height * 0.001) }]}>
-        <Image source={Logo} style={[styles.logo, { height: height * 0.5 }]} resizeMode="contain" /> 
-
-        <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Nova Ardiansyah</Text>
-        <Text style={{ marginBottom: 20 }}>Daftar akun baru</Text>
+        <CustomAuthHeader subtitle="Daftar akun baru" />
 
         <CustomInput placeholder="Alamat Email" value={email} setValue={setEmail} />
         <CustomInput placeholder="Password" value={password} setValue={setPassword} secureTextEntry />
@@ -48,14 +47,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     
     paddingHorizontal: 20,
-  },
-
-  logo: {
-    width: '70%',
-    maxWidth: 300,
-    maxHeight: 100,
-    
-    marginBottom: 10,
   },
 
   text: {

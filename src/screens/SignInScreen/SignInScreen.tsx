@@ -1,37 +1,40 @@
 import React, { useState } from 'react'
-import { View, Image, StyleSheet, useWindowDimensions, Text, ScrollView } from 'react-native'
-import Logo from '@/assets/images/logo-circle.png'
+import { View, StyleSheet, useWindowDimensions, ScrollView } from 'react-native'
 import CustomInput from '@/components/CustomInput'
 import CustomButton from '@/components/CustomButton'
+import { useNavigation } from '@react-navigation/native'
+import CustomAuthHeader from '@/components/CustomAuthHeader'
 const SignInScreen = () => {
+  const navigation = useNavigation()
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
   const { height } = useWindowDimensions()
    
   const onSignInPressed = () => {
-    console.warn('Sign in')
-    console.warn({ email, password })
+    navigation.navigate('Home' as never)
   }
 
   const onForgotPasswordPressed = () => {
-    console.warn('Forgot Password')
+    navigation.navigate('ResetPassword' as never)
+  }
+
+  const onSignUpPressed = () => {
+    navigation.navigate('SignUp' as never)
   }
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={[styles.root, { marginTop: -(height * 0.001) }]}>
-        <Image source={Logo} style={[styles.logo, { height: height * 0.5 }]} resizeMode="contain" /> 
-
-        <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Nova Ardiansyah</Text>
-        <Text style={{ marginBottom: 20 }}>Masuk ke akun Anda</Text>
+        <CustomAuthHeader subtitle="Masuk ke akun Anda" />
 
         <CustomInput placeholder="Alamat Email" value={email} setValue={setEmail} />
         <CustomInput placeholder="Password" value={password} setValue={setPassword} secureTextEntry />
 
         <CustomButton style={{ marginTop: 10 }} text="Masuk" onPress={onSignInPressed} />
         <CustomButton style={{ marginTop: 5 }} text="Lupa Password?" onPress={onForgotPasswordPressed} variant="tertiary" />
-        <CustomButton style={{ marginTop: -20 }} text="Belum punya akun? Daftar sekarang" onPress={onForgotPasswordPressed} variant="tertiary" />
+        <CustomButton style={{ marginTop: -20 }} text="Belum punya akun? Daftar sekarang" onPress={onSignUpPressed} variant="tertiary" />
       </View>
     </ScrollView>
   )
@@ -44,14 +47,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     
     paddingHorizontal: 20,
-  },
-
-  logo: {
-    width: '70%',
-    maxWidth: 300,
-    maxHeight: 100,
-    
-    marginBottom: 10,
   },
 })
 

@@ -1,34 +1,32 @@
 import React, { useState } from 'react'
-import { View, Image, StyleSheet, useWindowDimensions, Text, ScrollView } from 'react-native'
-import Logo from '@/assets/images/logo-circle.png'
+import { View, StyleSheet, useWindowDimensions, Text, ScrollView } from 'react-native'
 import CustomInput from '@/components/CustomInput'
 import CustomButton from '@/components/CustomButton'
+import CustomAuthHeader from '@/components/CustomAuthHeader'
+import { useNavigation } from '@react-navigation/native'
 
 const ResetPasswordScreen = () => {
+  const navigation = useNavigation()
+  const { height } = useWindowDimensions()
   const [email, setEmail] = useState('')
 
-  const { height } = useWindowDimensions()
-   
-  const onSignUpPressed = () => {
-    console.warn('Sign up')
+  const onForgotPasswordPressed = () => {
+    navigation.navigate('ConfirmResetPassword' as never)
   }
 
   const onSignInPressed = () => {
-    console.warn('Sign in')
+    navigation.navigate('SignIn' as never)
   }
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={[styles.root, { marginTop: -(height * 0.001) }]}>
-        <Image source={Logo} style={[styles.logo, { height: height * 0.5 }]} resizeMode="contain" /> 
-
-        <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Nova Ardiansyah</Text>
-        <Text style={{ marginBottom: 20 }}>Lupa Password</Text>
+        <CustomAuthHeader subtitle="Lupa Password?" />
 
         <CustomInput placeholder="Alamat Email" value={email} setValue={setEmail} />
         <Text style={styles.text}>Kode konfirmasi akan dikirim ke email Anda</Text>
 
-        <CustomButton style={{ marginTop: 10 }} text="Kirim Kode" onPress={onSignUpPressed} />
+        <CustomButton style={{ marginTop: 10 }} text="Kirim Kode" onPress={onForgotPasswordPressed} />
 
         <CustomButton style={{ marginTop: 5 }} text="Sudah punya akun? Masuk" onPress={onSignInPressed} variant="tertiary" />
       </View>
@@ -45,23 +43,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
 
-  logo: {
-    width: '70%',
-    maxWidth: 300,
-    maxHeight: 100,
-    
-    marginBottom: 10,
-  },
-
   text: {
     color: 'gray',
     alignSelf: 'flex-start',
     marginBottom: 10,
   },
-
-  link: {
-    color: '#FFC878',
-  }
 })
 
 export default ResetPasswordScreen
