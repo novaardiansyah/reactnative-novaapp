@@ -1,0 +1,12 @@
+{
+  "articles": [
+    {
+      "title": "React Native Generate APK — Debug and Release APK",
+      "source": "https://medium.com/geekculture/react-native-generate-apk-debug-and-release-apk-4e9981a2ea51"
+    },
+    {
+      "title": "How to change Appllication Name in React Native",
+      "source": "Locate to android/app/src/main/res/values/strings.xml and Change the value of label"
+    }
+  ]
+}
