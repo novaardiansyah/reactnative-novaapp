@@ -4,13 +4,14 @@ import { StyleProp, StyleSheet, Text, View, ViewStyle, Pressable } from 'react-n
 type CustomButtonProps = {
   style?: StyleProp<ViewStyle>
   onPress?: () => void
-  text: string
+  text: any
   variant?: 'primary' | 'tertiary' | 'secondary'
+  disabled?: boolean
 }
 
-const CustomButton = ({ style, onPress, text, variant = 'primary' }: CustomButtonProps) => {
+const CustomButton = ({ style, onPress, text, variant = 'primary', disabled }: CustomButtonProps) => {
   return (
-    <Pressable onPress={onPress} style={[styles.container, style, styles[`container_${variant}`]]}>
+    <Pressable onPress={onPress} style={[styles.container, style, styles[`container_${variant}`]]} disabled={disabled}>
       <Text style={[styles.text, styles[`text_${variant}`]]}>{text}</Text>
     </Pressable>
   )

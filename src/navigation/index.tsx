@@ -7,20 +7,32 @@ import ConfirmSignUpScreen from '@/screens/ConfirmSignUpScreen'
 import ResetPasswordScreen from '@/screens/ResetPasswordScreen'
 import ConfirmResetPasswordScreen from '@/screens/ConfirmResetPasswordScreen'
 import HomeScreen from '@/screens/HomeScreen/HomeScreen'
+import { useAuth } from '@/context/AuthContext' // pastikan ini sesuai path kamu
 
 const Stack = createNativeStackNavigator()
 
+const AuthStack = () => (
+  <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Screen name="SignIn" component={SignInScreen} />
+    <Stack.Screen name="SignUp" component={SignUpScreen} />
+    <Stack.Screen name="ConfirmSignUp" component={ConfirmSignUpScreen} />
+    <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
+    <Stack.Screen name="ConfirmResetPassword" component={ConfirmResetPasswordScreen} />
+  </Stack.Navigator>
+)
+
+const AppStack = () => (
+  <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Screen name="Home" component={HomeScreen} />
+  </Stack.Navigator>
+)
+
 const Navigation = () => {
+  const { user } = useAuth()
+
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="SignIn" component={SignInScreen} />
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="SignUp" component={SignUpScreen} />
-        <Stack.Screen name="ConfirmSignUp" component={ConfirmSignUpScreen} />
-        <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
-        <Stack.Screen name="ConfirmResetPassword" component={ConfirmResetPasswordScreen} />
-      </Stack.Navigator>
+      {user ? <AppStack /> : <AuthStack />}
     </NavigationContainer>
   )
 }

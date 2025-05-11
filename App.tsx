@@ -1,12 +1,15 @@
 import React from 'react'
 import { SafeAreaView, StyleSheet } from 'react-native'
 import Navigation from '@/navigation'
+import { AuthProvider } from '@/context/AuthContext'
 
 const App = () => {
   return (
-    <SafeAreaView style={styles.root}>
-      <Navigation />
-    </SafeAreaView>
+    <AuthProvider>
+      <SafeAreaView style={styles.root}>
+        <Navigation />
+      </SafeAreaView>
+    </AuthProvider>
   )
 }
 

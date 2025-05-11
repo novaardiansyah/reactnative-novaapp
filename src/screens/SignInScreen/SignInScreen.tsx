@@ -1,19 +1,38 @@
-import React, { useState } from 'react'
-import { View, StyleSheet, useWindowDimensions, ScrollView } from 'react-native'
+import React, { useContext, useState } from 'react'
+import { View, StyleSheet, useWindowDimensions, ScrollView, ActivityIndicator, Text } from 'react-native'
 import CustomInput from '@/components/CustomInput'
 import CustomButton from '@/components/CustomButton'
 import { useNavigation } from '@react-navigation/native'
 import CustomAuthHeader from '@/components/CustomAuthHeader'
 import { useForm } from 'react-hook-form'
+import { AuthContext } from '@/context/AuthContext'
 
 const SignInScreen = () => {
+  const [loading, setLoading] = useState(false)
   const navigation = useNavigation()
   const { height } = useWindowDimensions()
-  const { control, handleSubmit, formState: {errors}, setError } = useForm()
+  const { control, handleSubmit, setError } = useForm()
+  const { login } = useContext(AuthContext)
   
-  const onSignInPressed = (data: object) => {
-    // navigation.navigate('Home' as never)
-    setError('email', { message: 'Email atau password salah.' })
+  const onSignInPressed = async (data: object) => {
+    console.log('onSignInPressed()')
+    setLoading(true)
+
+    let auth = await login(data)
+    setLoading(false) 
+
+    if (auth.status !== 200) {
+      if (auth.data?.errors) {
+        let errors = auth.data.errors
+        for (let key in errors) {
+          setError(key, { message: errors[key] })
+        }
+      } else {
+        setError('email', { message: auth.data.message })
+      }
+    }
+
+    return;
   }
 
   const onForgotPasswordPressed = () => {
@@ -40,8 +59,13 @@ const SignInScreen = () => {
           rules={{ required: 'Password tidak boleh kosong.' }} 
           secureTextEntry 
         />
-        
-        <CustomButton style={{ marginTop: 10 }} text="Masuk" onPress={handleSubmit(onSignInPressed)} />
+      
+        <CustomButton style={{ marginTop: 15 }} 
+          text={loading ? <ActivityIndicator color="#fff" /> : 'Masuk'}
+          disabled={loading}
+          onPress={handleSubmit(onSignInPressed)} 
+        />
+
         <CustomButton style={{ marginTop: 5 }} text="Lupa Password?" onPress={onForgotPasswordPressed} variant="tertiary" />
         <CustomButton style={{ marginTop: -20 }} text="Belum punya akun? Daftar sekarang" onPress={onSignUpPressed} variant="tertiary" />
       </View>

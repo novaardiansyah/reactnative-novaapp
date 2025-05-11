@@ -11,5 +11,9 @@ module.exports = {
         extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
       },
     ],
+    ['module:react-native-dotenv', {
+      moduleName: '@env',
+      path: '.env',
+    }],
   ],
 };
