@@ -17,6 +17,7 @@
     "react": "19.0.0",
     "react-hook-form": "^7.56.3",
     "react-native": "0.79.2",
+    "react-native-config": "^1.5.5",
     "react-native-dotenv": "^3.4.11",
     "react-native-safe-area-context": "^5.4.0",
     "react-native-screens": "^4.10.0"
