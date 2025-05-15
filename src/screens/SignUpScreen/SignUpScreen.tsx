@@ -4,10 +4,11 @@ import CustomInput from '@/components/CustomInput'
 import CustomButton from '@/components/CustomButton'
 import { useNavigation } from '@react-navigation/native'
 import CustomAuthHeader from '@/components/CustomAuthHeader'
-import { useForm } from 'react-hook-form'
+import { set, useForm } from 'react-hook-form'
 import { API_URL, APP_DEBUG } from '@env'
 import { safeRequest } from '@/helpers/UtilsHelper'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import Toast from 'react-native-toast-message'
 
 const SignUpScreen = () => {
   const navigation = useNavigation()
@@ -34,6 +35,7 @@ const SignUpScreen = () => {
       method: 'post',
       data,
     });
+    setLoading(false)
 
     if (result.status !== 201) {
       if (result.data?.errors) {
@@ -50,10 +52,21 @@ const SignUpScreen = () => {
 
     const { user } = result.data
     
-    await AsyncStorage.setItem('confirmSignUp', user.id.toString())
-    setLoading(false)
+    setLoading(true)
 
-    navigation.navigate('ConfirmSignUp' as never)
+    await AsyncStorage.setItem('confirmSignUp', user.id.toString())
+    Toast.show({
+      type: 'success',
+      text1: 'Pendaftaran berhasil',
+      text2: 'Silakan periksa email Anda untuk mengonfirmasi pendaftaran.',
+      onHide: () => {
+        setLoading(false)
+        control._reset()
+        navigation.navigate('ConfirmSignUp' as never)
+      }
+    })
+
+    return
   }
 
   const onSignInPressed = () => {
