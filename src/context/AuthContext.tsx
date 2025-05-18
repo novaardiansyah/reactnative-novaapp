@@ -2,6 +2,7 @@ import React, { createContext, useState, useEffect, useContext } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL, APP_DEBUG } from '@env';
 import axios from 'axios';
+import { safeRequest } from '@/helpers/UtilsHelper';
 
 export const AuthContext = createContext({
   user: null,
@@ -14,53 +15,53 @@ export const AuthProvider = ({ children }: React.PropsWithChildren<{}>) => {
 
   const login = async (data: object) => {
     if (APP_DEBUG) console.log('login()')
-    
-    try {
-      const res = await axios.post(`${API_URL}/auth/login`, data);
 
-      const { access_token, expires_at } = res.data;
+    const result = await safeRequest({
+      url: `${API_URL}/auth/login`,
+      method: 'post',
+      data,
+    })
 
-      const userData = await axios.get(`${API_URL}/auth/me`, {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      })
-
-      const auth = { ...userData.data, token: access_token, token_expires_at: expires_at };
-
-      setUser(auth)
-
-      await AsyncStorage.multiSet([
-        ['user', JSON.stringify(auth)],
-        ['access_token', access_token],
-      ])
-
-      return { status: res.status, data: auth };
-    } catch (err: any) {
-      let error = err?.response?.data || { message: 'Something went wrong' };
-      return { status: err?.response?.status, data: error };
+    if (result?.status !== 200) {
+      let error = result?.data || { message: 'Something went wrong' }
+      return { status: result?.status, data: error }
     }
+
+    const { access_token, expires_at } = result.data
+
+    const userData = await safeRequest({
+      url: `${API_URL}/auth/me`,
+      method: 'get',
+    })
+
+    const auth = { ...userData.data, token: access_token, token_expires_at: expires_at }
+    setUser(auth)
+
+    await AsyncStorage.multiSet([
+      ['user', JSON.stringify(auth)],
+      ['access_token', access_token],
+    ])
+
+    return { status: result.status, data: auth }
   };
 
   const logout = async () => {
     if (APP_DEBUG) console.log('logout()')
     
-    try {
-      const res = await axios.post(`${API_URL}/auth/logout`, {}, {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      });
+    const result = await safeRequest({
+      url: `${API_URL}/auth/logout`,
+      method: 'post',
+    })
 
-      setUser(null);
-
-      await AsyncStorage.multiRemove(['user', 'access_token', 'confirmSignUp'])
-
-      return { status: res.status, data: res.data };
-    } catch (err: any) {
-      let error = err?.response?.data || { message: 'Something went wrong' };
-      return { status: err?.response?.status, data: error };
+    if (result?.status !== 200) {
+      let error = result?.data || { message: 'Something went wrong' }
+      return { status: result?.status, data: error }
     }
+
+    setUser(null)
+    await AsyncStorage.multiRemove(['user', 'access_token', 'confirmSignUp'])
+
+    return { status: result.status, data: result.data }
   };
 
   const loadUser = async () => {

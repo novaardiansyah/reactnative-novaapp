@@ -13,7 +13,7 @@ import Toast from 'react-native-toast-message'
 const ConfirmSignUpScreen = () => {
   const navigation = useNavigation()
   const [cooldown, setCooldown] = useState(0);
-  const [countCooldown, setCountCooldown] = useState(0);
+  const [countCooldown, setCountCooldown] = useState(60);
   const { control, handleSubmit, setError } = useForm<ConfirmSignUpFormData>()
   const { height } = useWindowDimensions()
   const [userId, setUserId] = useState<string | null>(null)
@@ -32,14 +32,19 @@ const ConfirmSignUpScreen = () => {
   }, [cooldown]);
 
   useEffect(() => {
-    const getPendingVerify = async () => {
-      const pendingVerify = await AsyncStorage.getItem('confirmSignUp')
-      if (!pendingVerify) navigation.navigate('SignIn' as never)
-      setUserId(pendingVerify)
-    }
+    const unsubscribe = navigation.addListener('focus', () => {
+      const getPendingVerify = async () => {
+        const pendingVerify = await AsyncStorage.getItem('confirmSignUp')
+        if (!pendingVerify) navigation.navigate('SignIn' as never)
+        setUserId(pendingVerify)
+      }
 
-    getPendingVerify()
-  }, [])
+      getPendingVerify()
+      setCooldown(countCooldown)
+    })
+
+    return unsubscribe
+  }, [navigation, countCooldown])
 
   type ConfirmSignUpFormData = {
     otp: string;
@@ -49,6 +54,7 @@ const ConfirmSignUpScreen = () => {
 
   const onConfirmPressed = async (data: ConfirmSignUpFormData) => {
     if (APP_DEBUG) console.log('onConfirmPressed()')
+    
     setLoading(true)
 
     data.user_id = userId
@@ -60,6 +66,8 @@ const ConfirmSignUpScreen = () => {
       data,
     });
     setLoading(false)
+
+    control._reset()
 
     if (result.status !== 200) {
       let error = result.data?.message || 'Terjadi kesalahan, silakan coba lagi.'
@@ -75,9 +83,10 @@ const ConfirmSignUpScreen = () => {
       type: 'success',
       text1: 'Pendaftaran berhasil',
       text2: 'Akun Anda telah dikonfirmasi. Silakan masuk.',
-      visibilityTime: 4000,
-      onHide: () => {
+      visibilityTime: 3000,
+      onHide: async () => {
         setLoading(false)
+        await AsyncStorage.removeItem('confirmSignUp')
         navigation.navigate('SignIn' as never)
       },
     });

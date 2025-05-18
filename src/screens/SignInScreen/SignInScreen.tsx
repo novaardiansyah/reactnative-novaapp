@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { View, StyleSheet, useWindowDimensions, ScrollView, ActivityIndicator, Text } from 'react-native'
 import CustomInput from '@/components/CustomInput'
 import CustomButton from '@/components/CustomButton'
@@ -6,6 +6,9 @@ import { useNavigation } from '@react-navigation/native'
 import CustomAuthHeader from '@/components/CustomAuthHeader'
 import { useForm } from 'react-hook-form'
 import { AuthContext } from '@/context/AuthContext'
+import { API_URL, APP_DEBUG } from '@env'
+import { safeRequest } from '@/helpers/UtilsHelper'
+import Toast from 'react-native-toast-message'
 
 const SignInScreen = () => {
   const [loading, setLoading] = useState(false)
@@ -13,7 +16,29 @@ const SignInScreen = () => {
   const { height } = useWindowDimensions()
   const { control, handleSubmit, setError } = useForm()
   const { login } = useContext(AuthContext)
+
+  // ! Test connection to API
+  const testConnection = async () => {
+    const result = await safeRequest({
+      url: `${API_URL}/ping`,
+      method: 'get',
+    });
+    
+    if (result.status !== 200) {
+      Toast.show({
+        type: 'error',
+        text1: 'Koneksi gagal',
+        text2: 'Tidak dapat terhubung ke server.',
+      })
+    } else {
+      console.log('Connection successful:', result.data.message)
+    }
+  }
   
+  useEffect(() => {
+    APP_DEBUG && testConnection()
+  }, [])
+
   const onSignInPressed = async (data: object) => {
     console.log('onSignInPressed()')
     setLoading(true)
