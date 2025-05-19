@@ -4,14 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Provider, BottomNavigation } from 'react-native-paper';
 import MaterialCommunityIcons from '@react-native-vector-icons/material-design-icons';
 import HomeScreen from '@/screens/HomeScreen/HomeScreen';
-
-function SettingsScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Settings!</Text>
-    </View>
-  );
-}
+import MeScreen from '@/screens/MeScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -29,7 +22,7 @@ export default function CustomButtonNavigation() {
               navigationState={state}
               safeAreaInsets={{ 
                 top: insets.top,
-                bottom: -15,
+                bottom: -30,
                 left: insets.left,
                 right: insets.right,
                }}
@@ -67,7 +60,7 @@ export default function CustomButtonNavigation() {
                     : route.name;
 
                 return (
-                  <Text style={{ color, fontSize: 12, fontWeight: focused ? 'bold' : 'normal', alignSelf: 'center', marginTop: -5 }}>
+                  <Text style={{ color, fontSize: 11, fontWeight: focused ? 'bold' : 'normal', alignSelf: 'center', marginTop: -13 }}>
                     {label}
                   </Text>
                 );
@@ -101,16 +94,16 @@ export default function CustomButtonNavigation() {
             component={HomeScreen}
             options={{
               tabBarIcon: ({ color }) => (
-                <MaterialCommunityIcons name="home" color={color} size={24} />
+                <MaterialCommunityIcons name="home-outline" color={color} size={18} />
               )
             }}
           />
           <Tab.Screen
-            name="Settings"
-            component={SettingsScreen}
+            name="Saya"
+            component={MeScreen}
             options={{
               tabBarIcon: ({ color }) => (
-                <MaterialCommunityIcons name="cog" color={color} size={24} />
+                <MaterialCommunityIcons name="account-outline" color={color} size={18} />
               ),
             }}
           />
