@@ -6,8 +6,8 @@ import SignUpScreen from '@/screens/SignUpScreen'
 import ConfirmSignUpScreen from '@/screens/ConfirmSignUpScreen'
 import ResetPasswordScreen from '@/screens/ResetPasswordScreen'
 import ConfirmResetPasswordScreen from '@/screens/ConfirmResetPasswordScreen'
-import HomeScreen from '@/screens/HomeScreen/HomeScreen'
 import { useAuth } from '@/context/AuthContext' // pastikan ini sesuai path kamu
+import CustomButtonNavigation from '@/navigation/CustomButtonNavigation'
 
 const Stack = createNativeStackNavigator()
 
@@ -21,19 +21,17 @@ const AuthStack = () => (
   </Stack.Navigator>
 )
 
-const AppStack = () => (
-  <Stack.Navigator screenOptions={{ headerShown: false }}>
-    <Stack.Screen name="Home" component={HomeScreen} />
-  </Stack.Navigator>
-)
-
 const Navigation = () => {
   const { user } = useAuth()
 
   return (
-    <NavigationContainer>
-      {user ? <AppStack /> : <AuthStack />}
-    </NavigationContainer>
+    <>
+      {user ? <CustomButtonNavigation /> : (
+        <NavigationContainer>
+          <AuthStack />
+        </NavigationContainer>
+      )}
+    </>
   )
 }
 
