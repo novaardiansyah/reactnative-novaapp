@@ -3,8 +3,8 @@ import { safeRequest } from '@/helpers/UtilsHelper';
 import { API_URL, APP_DEBUG } from '@env';
 import { useNavigation } from '@react-navigation/native';
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, ScrollView } from 'react-native';
-import { ActivityIndicator, Appbar, Card, List, MD2Colors, Text } from 'react-native-paper';
+import { StyleSheet, ScrollView, View } from 'react-native';
+import { ActivityIndicator, Appbar, Card, List, MD2Colors, Searchbar, Text, Tooltip } from 'react-native-paper';
 
 interface NoteListScreenProps {}
 
@@ -12,49 +12,73 @@ const NoteListScreen = (props: NoteListScreenProps) => {
   const navigation = useNavigation();
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showSearch, setShowSearch] = useState(false);
+
+  const fetchData = async () => {
+    setLoading(true)
+    
+    const queryParams = searchQuery ? `?search=${searchQuery}` : null;
+
+    const result = await safeRequest({
+      url: `${API_URL}/notes/${queryParams || ''}`,
+      method: 'get',
+    });
+
+    if (result.status !== 200) {
+      if (APP_DEBUG) console.error('Error fetching data:', result)
+      return setLoading(false)
+    }
+
+    setData(result.data?.data || [])
+    setLoading(false)
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true)
-
-      const result = await safeRequest({
-        url: `${API_URL}/notes`,
-        method: 'get',
-      });
-
-      if (result.status !== 200) {
-        if (APP_DEBUG) console.error('Error fetching data:', result)
-        return setLoading(false)
-      }
-
-      setData(result.data?.data || [])
-      setLoading(false)
-    };
-
-    fetchData()
-  }, []);
+    if (searchQuery === '') fetchData()
+  }, [searchQuery]);
 
   const onBackPressed = () => {
     navigation.goBack();
   }
 
-  const onSearchPressed = () => {
-    console.warn('This feature is not available yet');
-  }
-
   const stripHtml = (html: string) => {
-    return html.replace(/<[^>]+>/g, '');
+    return html ? html.replace(/<[^>]+>/g, '') : '';
   }
 
   return (
     <>
-      <Appbar.Header>
+      <Appbar.Header style={{ backgroundColor: '#fff' }}>
         <Appbar.BackAction onPress={onBackPressed} size={22} />
         <Appbar.Content title="Daftar Catatan" titleStyle={{ fontSize: 16 }} />
-        <Appbar.Action icon="magnify" onPress={onSearchPressed} size={22} />
+
+        { showSearch ? (
+            <Tooltip title="Tutup pencarian" enterTouchDelay={200}>
+              <Appbar.Action icon="close" onPress={() => setShowSearch(false)} size={22} />
+            </Tooltip>
+          ) : (
+            <Tooltip title="Cari data" enterTouchDelay={200}>
+              <Appbar.Action icon="magnify" onPress={() => setShowSearch(true)} size={22} />
+            </Tooltip>
+          )
+        }
       </Appbar.Header>
 
       <ScrollView style={styles.container}>
+        { showSearch && (
+            <Searchbar
+              placeholder="Search"
+              onChangeText={setSearchQuery}
+              onIconPress={fetchData}
+              onSubmitEditing={fetchData}
+              value={searchQuery}
+              style={{ marginBottom: 10, marginTop: -10, borderRadius: 5, backgroundColor: '#fff' }}
+            />
+          )
+        }
+
+        <View style={{ marginTop: 10 }}></View>
+
         {loading ? (
            <ActivityIndicator animating={true} color={MD2Colors.blue500} />
         ) : (
@@ -81,7 +105,7 @@ const NoteListScreen = (props: NoteListScreenProps) => {
                     </>
                   )}
                   description={stripHtml(item.description)}
-                  descriptionStyle={{ fontSize: 10 }}
+                  descriptionStyle={{ fontSize: 11 }}
                   right={props => <List.Icon {...props} icon="chevron-right" style={styles.listItemRight} />}
                   style={{ borderBottomWidth: .5, borderBottomColor: '#ddd' }}
                 />
