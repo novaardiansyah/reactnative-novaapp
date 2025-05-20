@@ -1,5 +1,5 @@
 import React from 'react'
-import { SafeAreaView, StyleSheet } from 'react-native'
+import { SafeAreaView, StyleSheet, View } from 'react-native'
 import Navigation from '@/navigation'
 import { AuthProvider } from '@/context/AuthContext'
 import Toast from 'react-native-toast-message'

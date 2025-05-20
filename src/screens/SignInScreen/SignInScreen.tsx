@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { View, StyleSheet, useWindowDimensions, ScrollView, ActivityIndicator, Text } from 'react-native'
+import { View, StyleSheet, useWindowDimensions, ScrollView, ActivityIndicator } from 'react-native'
 import CustomInput from '@/components/CustomInput'
 import CustomButton from '@/components/CustomButton'
 import { useNavigation } from '@react-navigation/native'

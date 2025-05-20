@@ -1,11 +1,21 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL, APP_DEBUG } from '@env';
-import axios from 'axios';
 import { safeRequest } from '@/helpers/UtilsHelper';
 
+type User = {
+  id: number;
+  name: string;
+  email: string;
+  email_verified_at: string;
+  created_at: string;
+  updated_at: string;
+  token: string;
+  token_expires_at: string;
+};
+
 export const AuthContext = createContext({
-  user: null,
+  user: null as User | null,
   login: async (data: object): Promise<any> => {},
   logout: async (): Promise<any> => {},
 });
@@ -29,6 +39,8 @@ export const AuthProvider = ({ children }: React.PropsWithChildren<{}>) => {
 
     const { access_token, expires_at } = result.data
 
+    await AsyncStorage.setItem('access_token', access_token)
+
     const userData = await safeRequest({
       url: `${API_URL}/auth/me`,
       method: 'get',
@@ -37,10 +49,7 @@ export const AuthProvider = ({ children }: React.PropsWithChildren<{}>) => {
     const auth = { ...userData.data, token: access_token, token_expires_at: expires_at }
     setUser(auth)
 
-    await AsyncStorage.multiSet([
-      ['user', JSON.stringify(auth)],
-      ['access_token', access_token],
-    ])
+    await AsyncStorage.setItem('user', JSON.stringify(auth))
 
     return { status: result.status, data: auth }
   };
