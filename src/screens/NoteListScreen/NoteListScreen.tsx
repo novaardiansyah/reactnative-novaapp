@@ -4,7 +4,7 @@ import { API_URL, APP_DEBUG } from '@env';
 import { useNavigation } from '@react-navigation/native';
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, ScrollView, View } from 'react-native';
-import { ActivityIndicator, Appbar, Card, List, MD2Colors, Searchbar, Text, Tooltip } from 'react-native-paper';
+import { ActivityIndicator, Appbar, Button, Card, FAB, List, MD2Colors, Searchbar, Text, Tooltip } from 'react-native-paper';
 
 interface NoteListScreenProps {}
 
@@ -16,6 +16,8 @@ const NoteListScreen = (props: NoteListScreenProps) => {
   const [showSearch, setShowSearch] = useState(false);
 
   const fetchData = async () => {
+    console.log('fetchData()')
+
     setLoading(true)
     
     const queryParams = searchQuery ? `?search=${searchQuery}` : null;
@@ -35,11 +37,22 @@ const NoteListScreen = (props: NoteListScreenProps) => {
   };
 
   useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchData()
+    })
+    return unsubscribe
+  }, [navigation])
+
+  useEffect(() => {
     if (searchQuery === '') fetchData()
-  }, [searchQuery]);
+  }, [searchQuery])
 
   const onBackPressed = () => {
     navigation.goBack();
+  }
+
+  const onAddPressed = () => {
+    navigation.navigate('NoteAdd' as never);
   }
 
   const stripHtml = (html: string) => {
@@ -82,36 +95,45 @@ const NoteListScreen = (props: NoteListScreenProps) => {
         {loading ? (
            <ActivityIndicator animating={true} color={MD2Colors.blue500} />
         ) : (
-          <Card style={styles.card}>
-            {data.map((item, index) => (
-              <CustomTouchableRipple key={index} onPress={() => console.log(item.id)}>
-                <List.Item
-                  title={() => (
-                    <>
-                      <Text style={{ fontSize: 12, marginBottom: 5 }}>
-                        {
-                          new Date(item.created_at).toLocaleDateString('id-ID', {
-                            weekday: 'long',
-                            day: '2-digit',
-                            month: 'short',
-                            year: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit', 
-                          })
-                        }
-                      </Text>
+          <>
+            {
+              !showSearch && (
+                <Button icon="plus-circle-outline" mode="contained" style={styles.buttonAdd} buttonColor="#3366ff" onPress={onAddPressed}>
+                  Buat
+                </Button>
+              )
+            }
+            <Card style={styles.card}>
+              {data.map((item, index) => (
+                <CustomTouchableRipple key={index} onPress={() => console.log(item.id)}>
+                  <List.Item
+                    title={() => (
+                      <>
+                        <Text style={{ fontSize: 12, marginBottom: 5 }}>
+                          {
+                            new Date(item.created_at).toLocaleDateString('id-ID', {
+                              weekday: 'long',
+                              day: '2-digit',
+                              month: 'short',
+                              year: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit', 
+                            })
+                          }
+                        </Text>
 
-                      <Text style={{ fontSize: 12, fontWeight: 'bold' }}>{item.title}</Text>
-                    </>
-                  )}
-                  description={stripHtml(item.description)}
-                  descriptionStyle={{ fontSize: 11 }}
-                  right={props => <List.Icon {...props} icon="chevron-right" style={styles.listItemRight} />}
-                  style={{ borderBottomWidth: .5, borderBottomColor: '#ddd' }}
-                />
-              </CustomTouchableRipple>
-            ))}
-          </Card>
+                        <Text style={{ fontSize: 12, fontWeight: 'bold' }}>{item.title}</Text>
+                      </>
+                    )}
+                    description={stripHtml(item.description)}
+                    descriptionStyle={{ fontSize: 11 }}
+                    right={props => <List.Icon {...props} icon="chevron-right" style={styles.listItemRight} />}
+                    style={{ borderBottomWidth: .5, borderBottomColor: '#ddd' }}
+                  />
+                </CustomTouchableRipple>
+              ))}
+            </Card>
+          </>
         )}
       </ScrollView>
     </>
@@ -124,7 +146,6 @@ const styles = StyleSheet.create({
   container: {
     paddingVertical: 20,
     paddingHorizontal: 15,
-    backgroundColor: '#f5f5f5',
   },
   card: {
     marginBottom: 50,
@@ -135,5 +156,12 @@ const styles = StyleSheet.create({
     marginRight: -10,
     paddingLeft: 10,
     alignSelf: 'center',
+  },
+
+  buttonAdd: {
+    width: 100, 
+    alignSelf: 'flex-end', 
+    marginBottom: 10, 
+    marginTop: -15
   }
 });
