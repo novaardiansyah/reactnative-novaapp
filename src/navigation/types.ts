@@ -4,4 +4,5 @@ export type RootStackParamList = {
   NoteAdd: undefined;
   NoteEdit: { id: number };
   GeneralSetting: undefined;
+  PrivacyPolicy: undefined;
 };

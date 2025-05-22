@@ -1,2 +1,5 @@
+import CardListMenu from './atoms/CardListMenu'
 import GeneralSetting from './GeneralSetting'
-export { GeneralSetting }
+import PrivacyPolicy from './PrivacyPolicy'
+
+export { GeneralSetting, PrivacyPolicy, CardListMenu }

@@ -1,6 +1,6 @@
 import React from 'react'
-import { SafeAreaView, StyleSheet, View } from 'react-native'
-import Navigation from '@/navigation'
+import { SafeAreaView, StyleSheet } from 'react-native'
+import Navigation from '@/navigation/Navigation'
 import { AuthProvider } from '@/context/AuthContext'
 import Toast from 'react-native-toast-message'
 import { DefaultTheme, PaperProvider } from 'react-native-paper'

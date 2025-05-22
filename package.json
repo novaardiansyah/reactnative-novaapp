@@ -9,7 +9,7 @@
     "start": "react-native start",
     "clear": "npm start -- --reset-cache",
     "test": "jest",
-    "android:build:prod": "cd android && ENVFILE=.env.production ./gradlew assembleRelease"
+    "android:build:prod": "cd android && ./gradlew clean && ENVFILE=.env.production ./gradlew assembleRelease"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^2.1.2",
