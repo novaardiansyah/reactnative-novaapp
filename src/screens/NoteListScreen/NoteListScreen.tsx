@@ -1,15 +1,19 @@
-import { CustomTouchableRipple } from '@/components/CustomPaper';
-import { safeRequest } from '@/helpers/UtilsHelper';
+import { CustomAppBar, CustomTouchableRipple } from '@/components/CustomPaper';
+import { safeRequest, stripHtml, toIndonesianDate } from '@/helpers/UtilsHelper';
 import { API_URL, APP_DEBUG } from '@env';
 import { useNavigation } from '@react-navigation/native';
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, ScrollView, View } from 'react-native';
 import { ActivityIndicator, Appbar, Button, Card, FAB, List, MD2Colors, Searchbar, Text, Tooltip } from 'react-native-paper';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { RootStackParamList } from '@/navigation/types';
 
 interface NoteListScreenProps {}
 
+type NoteListScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
 const NoteListScreen = (props: NoteListScreenProps) => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NoteListScreenNavigationProp>();
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -47,24 +51,17 @@ const NoteListScreen = (props: NoteListScreenProps) => {
     if (searchQuery === '') fetchData()
   }, [searchQuery])
 
-  const onBackPressed = () => {
-    navigation.goBack();
-  }
-
   const onAddPressed = () => {
     navigation.navigate('NoteAdd' as never);
   }
 
-  const stripHtml = (html: string) => {
-    return html ? html.replace(/<[^>]+>/g, '') : '';
+  const onEditPressed = (id: number) => {
+    navigation.navigate('NoteEdit', { id });
   }
 
   return (
     <>
-      <Appbar.Header style={{ backgroundColor: '#fff' }}>
-        <Appbar.BackAction onPress={onBackPressed} size={22} />
-        <Appbar.Content title="Daftar Catatan" titleStyle={{ fontSize: 16 }} />
-
+      <CustomAppBar title="Daftar Catatan">
         { showSearch ? (
             <Tooltip title="Tutup pencarian" enterTouchDelay={200}>
               <Appbar.Action icon="close" onPress={() => setShowSearch(false)} size={22} />
@@ -75,7 +72,7 @@ const NoteListScreen = (props: NoteListScreenProps) => {
             </Tooltip>
           )
         }
-      </Appbar.Header>
+      </CustomAppBar>
 
       <ScrollView style={styles.container}>
         { showSearch && (
@@ -93,7 +90,7 @@ const NoteListScreen = (props: NoteListScreenProps) => {
         <View style={{ marginTop: 10 }}></View>
 
         {loading ? (
-           <ActivityIndicator animating={true} color={MD2Colors.blue500} />
+           <ActivityIndicator animating color="#6690ff" />
         ) : (
           <>
             {
@@ -105,21 +102,12 @@ const NoteListScreen = (props: NoteListScreenProps) => {
             }
             <Card style={styles.card}>
               {data.map((item, index) => (
-                <CustomTouchableRipple key={index} onPress={() => console.log(item.id)}>
+                <CustomTouchableRipple key={index} onPress={() => onEditPressed(item.id)}>
                   <List.Item
                     title={() => (
                       <>
                         <Text style={{ fontSize: 12, marginBottom: 5 }}>
-                          {
-                            new Date(item.created_at).toLocaleDateString('id-ID', {
-                              weekday: 'long',
-                              day: '2-digit',
-                              month: 'short',
-                              year: 'numeric',
-                              hour: '2-digit',
-                              minute: '2-digit', 
-                            })
-                          }
+                          { toIndonesianDate(item.created_at) }
                         </Text>
 
                         <Text style={{ fontSize: 12, fontWeight: 'bold' }}>{item.title}</Text>

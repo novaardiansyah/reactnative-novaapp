@@ -45,6 +45,7 @@ export const AuthProvider = ({ children }: React.PropsWithChildren<{}>) => {
       url: `${API_URL}/auth/me`,
       method: 'get',
     })
+    // console.log(userData)
 
     const auth = { ...userData.data, token: access_token, token_expires_at: expires_at }
     setUser(auth)

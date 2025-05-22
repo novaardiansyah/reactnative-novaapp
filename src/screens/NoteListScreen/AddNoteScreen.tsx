@@ -1,23 +1,24 @@
-import { CustomFormSection, CustomTextInput } from '@/components/CustomPaper';
+import { CustomAppBar, CustomFormSection, CustomTextInput } from '@/components/CustomPaper';
 import { safeRequest } from '@/helpers/UtilsHelper';
 import { API_URL } from '@env';
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { StyleSheet, ScrollView } from 'react-native';
-import { Appbar } from 'react-native-paper';
 import Toast from 'react-native-toast-message';
 
 interface AddNoteScreenProps {}
 
 const AddNoteScreen = (props: AddNoteScreenProps) => {
   const [loading, setLoading] = useState(false);
-  const { control, handleSubmit, setError } = useForm()
+  const [formKey, setFormKey] = useState(0);
+  const { control, handleSubmit, setError, reset } = useForm()
 
   const navigation = useNavigation();
 
-  const onBackPressed = () => {
-    navigation.goBack();
+  const onReset = () => {
+    setFormKey(formKey + 1)
+    reset()
   }
 
   const saveNote = async (data: any): Promise<boolean> => {
@@ -44,7 +45,7 @@ const AddNoteScreen = (props: AddNoteScreenProps) => {
       return false
     }
 
-    control._reset()
+    onReset()
 
     Toast.show({
       type: 'success',
@@ -61,13 +62,10 @@ const AddNoteScreen = (props: AddNoteScreenProps) => {
 
   return (
     <>
-      <Appbar.Header style={{ backgroundColor: '#fff' }}>
-        <Appbar.BackAction onPress={onBackPressed} size={22} />
-        <Appbar.Content title="Buat Daftar Catatan" titleStyle={{ fontSize: 16 }} />
-      </Appbar.Header>
+      <CustomAppBar title="Buat Daftar Catatan" />
       
       <ScrollView style={styles.container}>
-        <CustomFormSection formType="add" addOrEditAction={handleSubmit(onSavePressed)} addOtherAction={handleSubmit(saveNote)} loading={loading}>
+        <CustomFormSection formType="add" addOrEditAction={handleSubmit(onSavePressed)} addOtherAction={handleSubmit(saveNote)} loading={loading} key={formKey}>
           <CustomTextInput 
             name="title"
             label="Judul Catatan" 
@@ -81,6 +79,7 @@ const AddNoteScreen = (props: AddNoteScreenProps) => {
             label="Keterangan" 
             markRequired
             rows={2}
+            maxRows={10}
             control={control}
           />
         </CustomFormSection>

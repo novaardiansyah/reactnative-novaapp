@@ -10,8 +10,12 @@ import { useAuth } from '@/context/AuthContext' // pastikan ini sesuai path kamu
 import CustomButtonNavigation from '@/navigation/CustomButtonNavigation'
 import NoteListScreen, { AddNoteScreen } from '@/screens/NoteListScreen'
 import { Provider } from 'react-native-paper'
+import EditNoteScreen from '@/screens/NoteListScreen/EditNoteScreen'
+import { RootStackParamList } from './types'
 
 const Stack = createNativeStackNavigator()
+
+const RootStack = createNativeStackNavigator<RootStackParamList>();
 
 const AuthStack = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -26,11 +30,12 @@ const AuthStack = () => (
 const MainStack = () => (
   <Provider>
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Tabs" component={CustomButtonNavigation} />
-        <Stack.Screen name="NoteList" component={NoteListScreen} />
-        <Stack.Screen name="NoteAdd" component={AddNoteScreen} />
-      </Stack.Navigator>
+      <RootStack.Navigator screenOptions={{ headerShown: false }}>
+        <RootStack.Screen name="Tabs" component={CustomButtonNavigation} />
+        <RootStack.Screen name="NoteList" component={NoteListScreen} />
+        <RootStack.Screen name="NoteAdd" component={AddNoteScreen} />
+        <RootStack.Screen name="NoteEdit" component={EditNoteScreen} />
+      </RootStack.Navigator>
     </NavigationContainer>
   </Provider>
 )

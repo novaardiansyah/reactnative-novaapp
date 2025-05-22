@@ -8,7 +8,6 @@ interface CustomFormSectionProps {
   loading?: boolean,
   addOrEditAction?: () => void,
   addOtherAction?: () => void,
-  deleteAction?: () => void,
 }
 
 const CustomFormSection = (props: CustomFormSectionProps) => {
@@ -38,13 +37,6 @@ const CustomFormSection = (props: CustomFormSectionProps) => {
         { !props.loading && formType === 'add' && (
             <Button mode="outlined" textColor="#3366ff" style={[styles.button, { borderColor: '#3366ff' }]} onPress={props.addOtherAction}>
               Buat & buat lainnya
-            </Button>
-          )
-        }
-
-        { !props.loading && formType === 'edit' && (
-            <Button mode="contained" buttonColor="#ff4e30" style={styles.button} onPress={props.deleteAction}>
-              Hapus
             </Button>
           )
         }

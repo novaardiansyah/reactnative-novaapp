@@ -32,3 +32,21 @@ export async function safeRequest<T = any>(
     return { status: statusCode, data: errorData };
   }
 }
+
+export interface ToIndonesianDateOptions extends Intl.DateTimeFormatOptions {}
+
+export async function toIndonesianDate(dateString: string, format?: ToIndonesianDateOptions): Promise<string> {
+  return new Date(dateString).toLocaleDateString('id-ID', {
+    weekday: 'long',
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    ...format,
+  } as ToIndonesianDateOptions);
+}
+
+export function stripHtml(html: string): string {
+  return html ? html.replace(/<[^>]+>/g, '') : '';
+}

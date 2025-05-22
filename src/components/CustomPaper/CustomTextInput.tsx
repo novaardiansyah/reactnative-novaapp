@@ -61,6 +61,6 @@ const styles = StyleSheet.create({
     color: '#FF4F30',
     alignSelf: 'stretch',
     paddingBottom: 10,
-    marginTop: -5,
+    marginTop: -8,
   }
 })
