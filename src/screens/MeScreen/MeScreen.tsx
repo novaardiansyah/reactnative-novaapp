@@ -2,14 +2,21 @@ import CustomButton from '@/components/CustomButton';
 import { AuthContext } from '@/context/AuthContext';
 import React, { useContext, useState } from 'react';
 import { Text, View, StyleSheet, ActivityIndicator, ScrollView } from 'react-native';
-import { Avatar, Card, List, TouchableRipple } from 'react-native-paper';
+import { Avatar, Card, List } from 'react-native-paper';
 import Logo from '@/assets/images/logo-circle.png'
+import { CustomTouchableRipple } from '@/components/CustomPaper';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '@/navigation/types';
+import { useNavigation } from '@react-navigation/native';
 
 interface MeScreenProps {}
+
+type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
 
 const MeScreen = (props: MeScreenProps) => {
   const { logout, user } = useContext(AuthContext)
   const [loading, setLoading] = useState(false)
+  const navigation = useNavigation<NavigationProps>();
 
   const onSignOutPressed = async() => {
     console.log('onSignOutPressed()')
@@ -29,6 +36,10 @@ const MeScreen = (props: MeScreenProps) => {
 
     return `${censoredUsername}@${domain}`;
   }
+
+  const onGeneralSettingsPressed = () => {
+    navigation.navigate('GeneralSetting')
+  }
   
   return (
     <ScrollView style={styles.container}>
@@ -41,55 +52,43 @@ const MeScreen = (props: MeScreenProps) => {
                 <View style={{ marginLeft: 12 }}>
                   <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{user.name}</Text>
                   <Text style={{ fontSize: 14, color: '#666' }}>
-                    {censoredEmail('novaardiansyah78@gmail.com')}
+                    {censoredEmail(user.email)}
                   </Text>
                 </View>
               </View>
             </Card>
 
             <Card style={styles.card}>
-              <TouchableRipple
-                onPress={() => console.log('Profile Saya')}
-                rippleColor="rgba(0, 0, 0, .32)"
-                borderless={false}
-              >
+              <CustomTouchableRipple onPress={() => console.log('Profile Saya')}>
                 <List.Item
                   title="Profile Saya"
                   left={props => <List.Icon {...props} icon="account-outline" />}
-                  right={props => <List.Icon {...props} icon="chevron-right" />}
+                  right={props => <List.Icon {...props} icon="chevron-right" style={styles.listItemRight} />}
                   titleStyle={{ fontSize: 14 , marginLeft: -6 }}
                 />
-              </TouchableRipple>  
+              </CustomTouchableRipple>  
 
-              <TouchableRipple
-                onPress={() => console.log('Profile Saya')}
-                rippleColor="rgba(0, 0, 0, .32)"
-                borderless={false}
-              >
+              <CustomTouchableRipple onPress={() => console.log('Profile Saya')}>
                 <List.Item
                   title="Keamanan Akun"
                   left={props => <List.Icon {...props} icon="shield-check-outline" />}
-                  right={props => <List.Icon {...props} icon="chevron-right" />}
+                  right={props => <List.Icon {...props} icon="chevron-right" style={styles.listItemRight} />}
                   titleStyle={{ fontSize: 14 , marginLeft: -6 }}
                 />
-              </TouchableRipple>
+              </CustomTouchableRipple>
 
-              <TouchableRipple
-                onPress={() => console.log('Profile Saya')}
-                rippleColor="rgba(0, 0, 0, .32)"
-                borderless={false}
-              >
+              <CustomTouchableRipple onPress={onGeneralSettingsPressed}>
                 <List.Item
                   title="Pengaturan Umum"
                   left={props => <List.Icon {...props} icon="cog" />}
-                  right={props => <List.Icon {...props} icon="chevron-right" />}
+                  right={props => <List.Icon {...props} icon="chevron-right" style={styles.listItemRight} />}
                   titleStyle={{ fontSize: 14 , marginLeft: -6 }}
                 />
-              </TouchableRipple>
+              </CustomTouchableRipple>
             </Card>
 
             <CustomButton 
-              text={loading ? (<ActivityIndicator color="#fff" />) : 'Sign Out'}
+              text={loading ? (<ActivityIndicator color="#3366FF" />) : 'Logout Akun'}
               onPress={onSignOutPressed} 
               disabled={loading}
               variant="secondary"
@@ -116,5 +115,10 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     backgroundColor: '#fff',
     overflow: 'hidden',
+  },
+  listItemRight: {
+    marginRight: -10,
+    paddingLeft: 10,
+    alignSelf: 'center',
   },
 });

@@ -1,4 +1,4 @@
-import { CustomAppBar, CustomFormSection, CustomTextInput } from '@/components/CustomPaper'
+import { CustomAppBar, CustomDialog, CustomFormSection, CustomTextInput } from '@/components/CustomPaper'
 import { safeRequest, stripHtml } from '@/helpers/UtilsHelper'
 import { API_URL, APP_DEBUG } from '@env'
 import { useNavigation } from '@react-navigation/native'
@@ -8,7 +8,7 @@ import { StyleSheet, ScrollView, ActivityIndicator } from 'react-native'
 import Toast from 'react-native-toast-message'
 import { RouteProp } from '@react-navigation/native'
 import { RootStackParamList } from '@/navigation/types'
-import { Appbar, Tooltip } from 'react-native-paper'
+import { Appbar, Button, Dialog, Portal, Text, Tooltip } from 'react-native-paper'
 
 type NoteEditRouteProp = RouteProp<RootStackParamList, 'NoteEdit'>;
 
@@ -22,6 +22,7 @@ const EditNoteScreen = (props: EditNoteScreenProps) => {
   const [formKey, setFormKey] = useState(0);
   const { control, handleSubmit, setError, setValue, reset } = useForm()
   const [data, setData] = useState<any>({})
+  const [confirmDelete, setConfirmDelete] = useState(false)
 
   const navigation = useNavigation();
 
@@ -96,6 +97,7 @@ const EditNoteScreen = (props: EditNoteScreenProps) => {
       return false
     }
 
+    onReset()
     navigation.goBack()
 
     Toast.show({
@@ -106,9 +108,10 @@ const EditNoteScreen = (props: EditNoteScreenProps) => {
     return true
   }
 
-  const onDeletePressed = async (id: number) => {
+  const onDeletePressed = async () => {
     setLoading(true)
-
+    setConfirmDelete(false)
+    
     const result = await safeRequest({
       url: `${API_URL}/notes/${id}`,
       method: 'delete',
@@ -140,13 +143,21 @@ const EditNoteScreen = (props: EditNoteScreenProps) => {
             <ActivityIndicator size={22} animating color="#6690ff" style={{ alignSelf: 'center', marginRight: 12 }} />
           ) : (
             <Tooltip title="Hapus data" enterTouchDelay={200}>
-              <Appbar.Action icon="trash-can-outline" iconColor="#ff4e30" onPress={() => onDeletePressed(data.id)} size={22} />
+              <Appbar.Action icon="trash-can-outline" iconColor="#ff4e30" onPress={() => setConfirmDelete(true)} size={22} />
             </Tooltip>
           )
         }
       </CustomAppBar>
       
       <ScrollView style={styles.container}>
+        <CustomDialog 
+          textBody="Apakah Anda yakin ingin menghapus catatan ini? data yang dihapus tidak dapat dipulihkan."
+          actionText="Hapus" 
+          visible={confirmDelete} 
+          setVisible={setConfirmDelete} 
+          onActionPressed={onDeletePressed}
+        />
+
         <CustomFormSection formType="edit" addOrEditAction={handleSubmit(onSavePressed)} loading={loading} key={formKey}>
           <CustomTextInput 
             name="title"
@@ -154,7 +165,6 @@ const EditNoteScreen = (props: EditNoteScreenProps) => {
             markRequired
             rows={1}
             control={control}
-            // defaultValue={data.title}
           />
 
           <CustomTextInput 
@@ -164,7 +174,6 @@ const EditNoteScreen = (props: EditNoteScreenProps) => {
             rows={2}
             maxRows={10}
             control={control}
-            // defaultValue={stripHtml(data.description)}
           />
         </CustomFormSection>
       </ScrollView>

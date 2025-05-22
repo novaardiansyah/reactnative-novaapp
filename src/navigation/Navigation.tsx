@@ -12,6 +12,7 @@ import NoteListScreen, { AddNoteScreen } from '@/screens/NoteListScreen'
 import { Provider } from 'react-native-paper'
 import EditNoteScreen from '@/screens/NoteListScreen/EditNoteScreen'
 import { RootStackParamList } from './types'
+import { GeneralSetting } from '@/screens/GeneralSetting'
 
 const Stack = createNativeStackNavigator()
 
@@ -35,6 +36,7 @@ const MainStack = () => (
         <RootStack.Screen name="NoteList" component={NoteListScreen} />
         <RootStack.Screen name="NoteAdd" component={AddNoteScreen} />
         <RootStack.Screen name="NoteEdit" component={EditNoteScreen} />
+        <RootStack.Screen name="GeneralSetting" component={GeneralSetting} />
       </RootStack.Navigator>
     </NavigationContainer>
   </Provider>
