@@ -20,10 +20,6 @@ const NoteListScreen = (props: NoteListScreenProps) => {
   const [showSearch, setShowSearch] = useState(false);
   const { height } = useWindowDimensions();
 
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false);
-
   const fetchData = async () => {
     console.log('fetchData()')
 
@@ -52,10 +48,6 @@ const NoteListScreen = (props: NoteListScreenProps) => {
     return unsubscribe
   }, [navigation])
 
-  useEffect(() => {
-    if (searchQuery === '') fetchData()
-  }, [searchQuery])
-
   const onAddPressed = () => {
     navigation.navigate('NoteAdd' as never);
   }
@@ -65,7 +57,7 @@ const NoteListScreen = (props: NoteListScreenProps) => {
   }
 
   return (
-    <>
+    <View style={{ flex: 1 }}>
       <CustomAppBar title="Daftar Catatan">
         <Appbar.Action icon="plus-circle-outline" onPress={onAddPressed} size={22} />
         { showSearch ? (
@@ -87,14 +79,14 @@ const NoteListScreen = (props: NoteListScreenProps) => {
             onIconPress={fetchData}
             onSubmitEditing={fetchData}
             value={searchQuery}
-            style={{ marginBottom: 0, marginTop: -10, borderRadius: 5, backgroundColor: '#fff' }}
+            style={styles.searchBar}
           />
         )
       }
 
       {
         loading ? (
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', height: height - 60 }}>
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <Text style={{ marginBottom: 10 }}>Memuat data...</Text>
             <ActivityIndicator animating color="#6690ff" />
           </View>
@@ -104,7 +96,9 @@ const NoteListScreen = (props: NoteListScreenProps) => {
               data={data}
               keyExtractor={(item) => item.id.toString()}
               showsVerticalScrollIndicator
-              style={{ height: height - 60 }}
+              keyboardShouldPersistTaps="handled"
+              removeClippedSubviews={false}
+              // style={{ height: height - 60 }}
               renderItem={({ item }) => (
                 <CustomTouchableRipple onPress={() => onEditPressed(item.id)}>
                   <List.Item
@@ -128,7 +122,7 @@ const NoteListScreen = (props: NoteListScreenProps) => {
           </CustomCard>
         )
       }
-    </>
+    </View>
   );
 };
 
@@ -146,5 +140,12 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end', 
     marginBottom: 10, 
     marginTop: -15
+  },
+
+  searchBar: {
+    marginBottom: 0, 
+    marginTop: -10, 
+    borderRadius: 5, 
+    backgroundColor: '#fff'
   }
 });
