@@ -1,10 +1,10 @@
-import { CustomAppBar, CustomTouchableRipple } from '@/components/CustomPaper';
+import { CustomAppBar, CustomCard, CustomTouchableRipple } from '@/components/CustomPaper';
 import { safeRequest, stripHtml, toIndonesianDate } from '@/helpers/UtilsHelper';
 import { API_URL, APP_DEBUG } from '@env';
 import { useNavigation } from '@react-navigation/native';
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, ScrollView, View } from 'react-native';
-import { ActivityIndicator, Appbar, Button, Card, FAB, List, MD2Colors, Searchbar, Text, Tooltip } from 'react-native-paper';
+import { StyleSheet, View, FlatList, useWindowDimensions } from 'react-native';
+import { ActivityIndicator, Appbar, List, Searchbar, Text, Tooltip } from 'react-native-paper';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { RootStackParamList } from '@/navigation/types';
 
@@ -18,6 +18,11 @@ const NoteListScreen = (props: NoteListScreenProps) => {
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearch, setShowSearch] = useState(false);
+  const { height } = useWindowDimensions();
+
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
 
   const fetchData = async () => {
     console.log('fetchData()')
@@ -62,6 +67,7 @@ const NoteListScreen = (props: NoteListScreenProps) => {
   return (
     <>
       <CustomAppBar title="Daftar Catatan">
+        <Appbar.Action icon="plus-circle-outline" onPress={onAddPressed} size={22} />
         { showSearch ? (
             <Tooltip title="Tutup pencarian" enterTouchDelay={200}>
               <Appbar.Action icon="close" onPress={() => setShowSearch(false)} size={22} />
@@ -74,35 +80,33 @@ const NoteListScreen = (props: NoteListScreenProps) => {
         }
       </CustomAppBar>
 
-      <ScrollView style={styles.container}>
-        { showSearch && (
-            <Searchbar
-              placeholder="Search"
-              onChangeText={setSearchQuery}
-              onIconPress={fetchData}
-              onSubmitEditing={fetchData}
-              value={searchQuery}
-              style={{ marginBottom: 10, marginTop: -10, borderRadius: 5, backgroundColor: '#fff' }}
-            />
-          )
-        }
+      { showSearch && (
+          <Searchbar
+            placeholder="Search"
+            onChangeText={setSearchQuery}
+            onIconPress={fetchData}
+            onSubmitEditing={fetchData}
+            value={searchQuery}
+            style={{ marginBottom: 0, marginTop: -10, borderRadius: 5, backgroundColor: '#fff' }}
+          />
+        )
+      }
 
-        <View style={{ marginTop: 10 }}></View>
-
-        {loading ? (
-           <ActivityIndicator animating color="#6690ff" />
+      {
+        loading ? (
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', height: height - 60 }}>
+            <Text style={{ marginBottom: 10 }}>Memuat data...</Text>
+            <ActivityIndicator animating color="#6690ff" />
+          </View>
         ) : (
-          <>
-            {
-              !showSearch && (
-                <Button icon="plus-circle-outline" mode="contained" style={styles.buttonAdd} buttonColor="#3366ff" onPress={onAddPressed}>
-                  Buat
-                </Button>
-              )
-            }
-            <Card style={styles.card}>
-              {data.map((item, index) => (
-                <CustomTouchableRipple key={index} onPress={() => onEditPressed(item.id)}>
+          <CustomCard>
+            <FlatList 
+              data={data}
+              keyExtractor={(item) => item.id.toString()}
+              showsVerticalScrollIndicator
+              style={{ height: height - 60 }}
+              renderItem={({ item }) => (
+                <CustomTouchableRipple onPress={() => onEditPressed(item.id)}>
                   <List.Item
                     title={() => (
                       <>
@@ -119,11 +123,11 @@ const NoteListScreen = (props: NoteListScreenProps) => {
                     style={{ borderBottomWidth: .5, borderBottomColor: '#ddd' }}
                   />
                 </CustomTouchableRipple>
-              ))}
-            </Card>
-          </>
-        )}
-      </ScrollView>
+              )}
+            />
+          </CustomCard>
+        )
+      }
     </>
   );
 };
@@ -131,15 +135,6 @@ const NoteListScreen = (props: NoteListScreenProps) => {
 export default NoteListScreen;
 
 const styles = StyleSheet.create({
-  container: {
-    paddingVertical: 20,
-    paddingHorizontal: 15,
-  },
-  card: {
-    marginBottom: 50,
-    backgroundColor: '#fff',
-    overflow: 'hidden',
-  },
   listItemRight: {
     marginRight: -10,
     paddingLeft: 10,
