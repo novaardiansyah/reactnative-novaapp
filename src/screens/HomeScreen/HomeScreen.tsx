@@ -1,9 +1,10 @@
 import { AuthContext } from '@/context/AuthContext';
 import React, { useContext } from 'react';
 import { Text, View, StyleSheet, ScrollView } from 'react-native';
-import { Avatar, Card, List, TouchableRipple } from 'react-native-paper';
+import { Avatar, List } from 'react-native-paper';
 import Logo from '@/assets/images/logo-circle.png'
 import { useNavigation } from '@react-navigation/native';
+import { CustomCard, CustomTouchableRipple } from '@/components/CustomPaper';
 
 interface HomeScreenProps {}
 
@@ -25,7 +26,7 @@ const HomeScreen = (props: HomeScreenProps) => {
 
   return (
     <ScrollView style={styles.container}>
-      <Card style={[styles.card, { padding: 15 }]}>
+      <CustomCard style={{ padding: 15 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Avatar.Image size={50} source={Logo} style={{ backgroundColor: '#6690ff', borderRadius: 50 }} />
           <View style={{ marginLeft: 12 }}>
@@ -35,15 +36,13 @@ const HomeScreen = (props: HomeScreenProps) => {
             </Text>
           </View>
         </View>
-      </Card>
+      </CustomCard>
 
-      <Card style={styles.card}>
+      <CustomCard>
         { menus.map((menu, index) => (
-            <TouchableRipple
+            <CustomTouchableRipple
               key={index}
               onPress={menu.onPress}
-              rippleColor="rgba(0, 0, 0, .32)"
-              borderless={false}
             >
               <List.Item
                 title={menu.title}
@@ -51,10 +50,10 @@ const HomeScreen = (props: HomeScreenProps) => {
                 right={props => <List.Icon {...props} icon="chevron-right" />}
                 titleStyle={{ fontSize: 14 , marginLeft: -6 }}
               />
-            </TouchableRipple>
+            </CustomTouchableRipple>
           ))
         }
-      </Card>
+      </CustomCard>
     </ScrollView>
   );
 };
@@ -65,10 +64,5 @@ const styles = StyleSheet.create({
   container: {
     paddingVertical: 20,
     paddingHorizontal: 15,
-  },
-  card: {
-    marginBottom: 20,
-    backgroundColor: '#fff',
-    overflow: 'hidden',
-  },
+  }
 });

@@ -77,3 +77,4 @@ yarn-error.log
 .env
 .env.production
 android/app/my-release-key.jks
+android/app/release/
