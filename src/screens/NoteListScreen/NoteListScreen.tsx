@@ -3,10 +3,11 @@ import { safeRequest, stripHtml, toIndonesianDate } from '@/helpers/UtilsHelper'
 import { API_URL, APP_DEBUG } from '@env';
 import { useNavigation } from '@react-navigation/native';
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, View, FlatList, TextInput } from 'react-native';
-import { ActivityIndicator, Appbar, List, Text, Tooltip } from 'react-native-paper';
+import { StyleSheet, FlatList, TextInput, View } from 'react-native';
+import { ActivityIndicator, Appbar, Text, Tooltip } from 'react-native-paper';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { RootStackParamList } from '@/navigation/types';
+import NoteListItem from './atoms/NoteListItem';
 
 interface NoteListScreenProps {}
 
@@ -27,7 +28,7 @@ const NoteListScreen = (props: NoteListScreenProps) => {
     const queryParams = searchKeyword ? `&search=${searchKeyword}` : null;
 
     const result = await safeRequest({
-      url: `${API_URL}/notes/?per_page=25${queryParams || ''}`,
+      url: `${API_URL}/notes/?per_page=10${queryParams || ''}`,
       method: 'get',
     });
 
@@ -107,24 +108,8 @@ const NoteListScreen = (props: NoteListScreenProps) => {
             showsVerticalScrollIndicator
             keyboardShouldPersistTaps="handled"
             style={{ flex: 1 }}
-            renderItem={({ item }) => (
-              <CustomTouchableRipple onPress={() => onEditPressed(item.id)}>
-                <List.Item
-                  title={() => (
-                    <>
-                      <Text style={{ fontSize: 12, marginBottom: 5 }}>
-                        { toIndonesianDate(item.updated_at) }
-                      </Text>
-
-                      <Text style={{ fontSize: 12, fontWeight: 'bold' }}>{item.title}</Text>
-                    </>
-                  )}
-                  description={stripHtml(item.description)}
-                  descriptionStyle={{ fontSize: 11 }}
-                  right={props => <List.Icon {...props} icon="chevron-right" style={styles.listItemRight} />}
-                  style={{ borderBottomWidth: .5, borderBottomColor: '#ddd' }}
-                />
-              </CustomTouchableRipple>
+            renderItem={({ index, item }) => (
+              <NoteListItem onActionPressed={onEditPressed} item={item} index={index + 1} />
             )}
           />
         )
