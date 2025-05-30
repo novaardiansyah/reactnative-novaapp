@@ -1,10 +1,10 @@
-import { CustomAppBar, CustomCard, CustomTouchableRipple } from '@/components/CustomPaper';
+import { CustomAppBar, CustomTouchableRipple } from '@/components/CustomPaper';
 import { safeRequest, stripHtml, toIndonesianDate } from '@/helpers/UtilsHelper';
 import { API_URL, APP_DEBUG } from '@env';
 import { useNavigation } from '@react-navigation/native';
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, FlatList, useWindowDimensions } from 'react-native';
-import { ActivityIndicator, Appbar, List, Searchbar, Text, Tooltip } from 'react-native-paper';
+import React, { useState, useEffect, useRef } from 'react';
+import { StyleSheet, View, FlatList, TextInput } from 'react-native';
+import { ActivityIndicator, Appbar, List, Text, Tooltip } from 'react-native-paper';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { RootStackParamList } from '@/navigation/types';
 
@@ -16,16 +16,15 @@ const NoteListScreen = (props: NoteListScreenProps) => {
   const navigation = useNavigation<NoteListScreenNavigationProp>();
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
   const [showSearch, setShowSearch] = useState(false);
-  const { height } = useWindowDimensions();
+  const searchRef = useRef<TextInput>(null);
 
-  const fetchData = async () => {
+  const fetchData = async (searchKeyword?: string) => {
     console.log('fetchData()')
 
     setLoading(true)
     
-    const queryParams = searchQuery ? `?search=${searchQuery}` : null;
+    const queryParams = searchKeyword ? `?search=${searchKeyword}` : null;
 
     const result = await safeRequest({
       url: `${API_URL}/notes/${queryParams || ''}`,
@@ -56,13 +55,23 @@ const NoteListScreen = (props: NoteListScreenProps) => {
     navigation.navigate('NoteEdit', { id });
   }
 
+  const handleSearch = (value: string) => {
+    fetchData(value);
+  };
+
+  const closeSearchBar = () => {
+    setShowSearch(false);
+    searchRef.current?.clear();
+    fetchData();
+  }
+
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.container}>
       <CustomAppBar title="Daftar Catatan">
         <Appbar.Action icon="plus-circle-outline" onPress={onAddPressed} size={22} />
         { showSearch ? (
             <Tooltip title="Tutup pencarian" enterTouchDelay={200}>
-              <Appbar.Action icon="close" onPress={() => setShowSearch(false)} size={22} />
+              <Appbar.Action icon="close" onPress={closeSearchBar} size={22} />
             </Tooltip>
           ) : (
             <Tooltip title="Cari data" enterTouchDelay={200}>
@@ -73,14 +82,15 @@ const NoteListScreen = (props: NoteListScreenProps) => {
       </CustomAppBar>
 
       { showSearch && (
-          <Searchbar
-            placeholder="Search"
-            onChangeText={setSearchQuery}
-            onIconPress={fetchData}
-            onSubmitEditing={fetchData}
-            value={searchQuery}
-            style={styles.searchBar}
-          />
+          <View style={{ padding: 10, backgroundColor: '#fff' }}>
+            <TextInput
+              placeholder="Ketik untuk mencari..."
+              autoFocus
+              onSubmitEditing={(event) => handleSearch(event.nativeEvent.text)}
+              ref={searchRef}
+              style={styles.searchBar}
+            />
+          </View>
         )
       }
 
@@ -91,35 +101,32 @@ const NoteListScreen = (props: NoteListScreenProps) => {
             <ActivityIndicator animating color="#6690ff" />
           </View>
         ) : (
-          <CustomCard>
-            <FlatList 
-              data={data}
-              keyExtractor={(item) => item.id.toString()}
-              showsVerticalScrollIndicator
-              keyboardShouldPersistTaps="handled"
-              removeClippedSubviews={false}
-              // style={{ height: height - 60 }}
-              renderItem={({ item }) => (
-                <CustomTouchableRipple onPress={() => onEditPressed(item.id)}>
-                  <List.Item
-                    title={() => (
-                      <>
-                        <Text style={{ fontSize: 12, marginBottom: 5 }}>
-                          { toIndonesianDate(item.created_at) }
-                        </Text>
+          <FlatList 
+            data={data}
+            keyExtractor={(item) => item.id.toString()}
+            showsVerticalScrollIndicator
+            keyboardShouldPersistTaps="handled"
+            style={{ flex: 1 }}
+            renderItem={({ item }) => (
+              <CustomTouchableRipple onPress={() => onEditPressed(item.id)}>
+                <List.Item
+                  title={() => (
+                    <>
+                      <Text style={{ fontSize: 12, marginBottom: 5 }}>
+                        { toIndonesianDate(item.created_at) }
+                      </Text>
 
-                        <Text style={{ fontSize: 12, fontWeight: 'bold' }}>{item.title}</Text>
-                      </>
-                    )}
-                    description={stripHtml(item.description)}
-                    descriptionStyle={{ fontSize: 11 }}
-                    right={props => <List.Icon {...props} icon="chevron-right" style={styles.listItemRight} />}
-                    style={{ borderBottomWidth: .5, borderBottomColor: '#ddd' }}
-                  />
-                </CustomTouchableRipple>
-              )}
-            />
-          </CustomCard>
+                      <Text style={{ fontSize: 12, fontWeight: 'bold' }}>{item.title}</Text>
+                    </>
+                  )}
+                  description={stripHtml(item.description)}
+                  descriptionStyle={{ fontSize: 11 }}
+                  right={props => <List.Icon {...props} icon="chevron-right" style={styles.listItemRight} />}
+                  style={{ borderBottomWidth: .5, borderBottomColor: '#ddd' }}
+                />
+              </CustomTouchableRipple>
+            )}
+          />
         )
       }
     </View>
@@ -129,6 +136,11 @@ const NoteListScreen = (props: NoteListScreenProps) => {
 export default NoteListScreen;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+
   listItemRight: {
     marginRight: -10,
     paddingLeft: 10,
@@ -143,9 +155,10 @@ const styles = StyleSheet.create({
   },
 
   searchBar: {
-    marginBottom: 0, 
-    marginTop: -10, 
+    height: 40, 
+    borderColor: '#ccc', 
+    borderWidth: 1, 
     borderRadius: 5, 
-    backgroundColor: '#fff'
+    paddingHorizontal: 10 
   }
 });
