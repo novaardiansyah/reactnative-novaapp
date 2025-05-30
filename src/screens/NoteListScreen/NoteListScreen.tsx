@@ -24,10 +24,10 @@ const NoteListScreen = (props: NoteListScreenProps) => {
 
     setLoading(true)
     
-    const queryParams = searchKeyword ? `?search=${searchKeyword}` : null;
+    const queryParams = searchKeyword ? `&search=${searchKeyword}` : null;
 
     const result = await safeRequest({
-      url: `${API_URL}/notes/${queryParams || ''}`,
+      url: `${API_URL}/notes/?per_page=25${queryParams || ''}`,
       method: 'get',
     });
 
@@ -113,7 +113,7 @@ const NoteListScreen = (props: NoteListScreenProps) => {
                   title={() => (
                     <>
                       <Text style={{ fontSize: 12, marginBottom: 5 }}>
-                        { toIndonesianDate(item.created_at) }
+                        { toIndonesianDate(item.updated_at) }
                       </Text>
 
                       <Text style={{ fontSize: 12, fontWeight: 'bold' }}>{item.title}</Text>
