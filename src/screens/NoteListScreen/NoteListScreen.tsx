@@ -106,8 +106,10 @@ const NoteListScreen = (props: NoteListScreenProps) => {
         keyExtractor={(item) => item.id.toString()}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
-        renderItem={({ index, item }) => (
-          <NoteListItem onActionPressed={onEditPressed} item={item} index={index + 1} />
+        maxToRenderPerBatch={10}
+        initialNumToRender={8}
+        renderItem={({ item }) => (
+          <NoteListItem onActionPressed={onEditPressed} item={item} />
         )}
         ListEmptyComponent={() => (
           loading ? (

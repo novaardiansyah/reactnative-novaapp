@@ -1,6 +1,6 @@
 import { CustomTouchableRipple } from '@/components/CustomPaper';
 import { stripHtml, toIndonesianDate } from '@/helpers/UtilsHelper';
-import React from 'react';
+import React, { memo } from 'react';
 import { Text, StyleSheet, View } from 'react-native';
 import { Icon } from 'react-native-paper';
 
@@ -12,16 +12,16 @@ interface NoteListItemProps {
     description: string;
     updated_at: string;
   };
-  index?: number;
 }
 
 const NoteListItem = (props: NoteListItemProps) => {
-  const { index, item, onActionPressed } = props
+  const { item, onActionPressed } = props
 
   let description = stripHtml(item.description);
-
-  if (description.length > 100) {
-    description = description.substring(0, 100) + '...';
+  
+  if (description.length > 90) {
+    description = description.replace(/\n/g, ' ');
+    description = description.substring(0, 90) + '...';
   }
 
   return (
@@ -42,7 +42,7 @@ const NoteListItem = (props: NoteListItemProps) => {
   );
 };
 
-export default NoteListItem;
+export default memo(NoteListItem, (prevProps, nextProps) => prevProps.item.updated_at === nextProps.item.updated_at)
 
 const styles = StyleSheet.create({
   container: {
