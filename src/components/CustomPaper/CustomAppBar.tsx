@@ -1,11 +1,12 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react'
-import { StyleSheet } from 'react-native'
+import { StyleProp, StyleSheet } from 'react-native';
 import { Appbar } from 'react-native-paper'
 
 interface CustomAppBarProps {
   children?: React.ReactNode,
   title: string
+  style?: StyleProp<any>
 }
 
 const CustomAppBar = (props: CustomAppBarProps) => {
@@ -18,7 +19,7 @@ const CustomAppBar = (props: CustomAppBarProps) => {
   }
 
   return (
-    <Appbar.Header style={{ backgroundColor: '#fff' }}>
+    <Appbar.Header style={[{ backgroundColor: '#fff' }, props.style]}>
       <Appbar.BackAction onPress={onBackPressed} size={22} />
       <Appbar.Content title={title} titleStyle={{ fontSize: 16 }} />
       {children}      
