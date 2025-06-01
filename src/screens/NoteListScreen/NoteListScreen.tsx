@@ -2,12 +2,13 @@ import { CustomAppBar } from '@/components/CustomPaper'
 import { safeRequest } from '@/helpers/UtilsHelper'
 import { API_URL, APP_DEBUG } from '@env'
 import { useNavigation } from '@react-navigation/native'
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { StyleSheet, FlatList, TextInput, View, Text } from 'react-native'
 import { ActivityIndicator, Appbar, Tooltip } from 'react-native-paper'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { RootStackParamList } from '@/navigation/types'
 import NoteListItem from './atoms/NoteListItem'
+import { NoteItemType } from './atoms/types'
 
 interface NoteListScreenProps {}
 
@@ -52,6 +53,10 @@ const NoteListScreen = (props: NoteListScreenProps) => {
     })
     return unsubscribe
   }, [navigation])
+
+  const renderItem = useCallback(({ item }: { item: NoteItemType }) => {
+    return <NoteListItem onActionPressed={onEditPressed} item={item} />
+  }, [])
   
   const onAddPressed = () => {
     navigation.navigate('NoteAdd' as never)
@@ -108,9 +113,7 @@ const NoteListScreen = (props: NoteListScreenProps) => {
         keyboardShouldPersistTaps="handled"
         maxToRenderPerBatch={10}
         initialNumToRender={8}
-        renderItem={({ item }) => (
-          <NoteListItem onActionPressed={onEditPressed} item={item} />
-        )}
+        renderItem={renderItem}
         ListEmptyComponent={() => (
           loading ? (
             <ActivityIndicator size={25} color="#3366FF" style={{ marginTop: 20 }} />

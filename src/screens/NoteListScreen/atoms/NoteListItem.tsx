@@ -3,15 +3,11 @@ import { stripHtml, toIndonesianDate } from '@/helpers/UtilsHelper';
 import React, { memo } from 'react';
 import { Text, StyleSheet, View } from 'react-native';
 import { Icon } from 'react-native-paper';
+import { NoteItemType } from './types';
 
 interface NoteListItemProps {
   onActionPressed: (id: number) => void;
-  item: {
-    id: number;
-    title: string;
-    description: string;
-    updated_at: string;
-  };
+  item: NoteItemType
 }
 
 const NoteListItem = (props: NoteListItemProps) => {
