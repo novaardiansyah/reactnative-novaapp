@@ -59,7 +59,7 @@ const NoteListScreen = (props: NoteListScreenProps) => {
   }, [])
   
   const onAddPressed = () => {
-    navigation.navigate('NoteAdd' as never)
+    navigation.navigate('NoteAdd')
   }
 
   const onEditPressed = (id: number) => {
@@ -71,8 +71,12 @@ const NoteListScreen = (props: NoteListScreenProps) => {
   }
 
   const closeSearchBar = () => {
-    setShowSearch(false)
+    setData([])
+    setLoading(true)
+
     searchRef.current?.clear()
+    setShowSearch(false)
+
     fetchData()
   }
 
