@@ -92,7 +92,8 @@ export default AddNoteScreen;
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 20,
-    paddingHorizontal: 15,
+    padding: 15,
+    backgroundColor: '#fff',
+    flex: 1,
   }
 });

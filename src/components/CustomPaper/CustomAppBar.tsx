@@ -19,7 +19,7 @@ const CustomAppBar = (props: CustomAppBarProps) => {
   }
 
   return (
-    <Appbar.Header style={[{ backgroundColor: '#fff' }, props.style]}>
+    <Appbar.Header style={[styles.container, props.style]}>
       <Appbar.BackAction onPress={onBackPressed} size={22} />
       <Appbar.Content title={title} titleStyle={{ fontSize: 16 }} />
       {children}      
@@ -30,5 +30,9 @@ const CustomAppBar = (props: CustomAppBarProps) => {
 export default CustomAppBar
 
 const styles = StyleSheet.create({
-  container: {}
+  container: {
+    borderBottomWidth: 0.5, 
+    borderBottomColor: '#ddd',
+    backgroundColor: '#fff'
+  }
 })

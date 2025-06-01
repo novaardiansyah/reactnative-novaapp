@@ -2,13 +2,13 @@ import { CustomAppBar, CustomDialog, CustomFormSection, CustomTextInput } from '
 import { safeRequest, stripHtml } from '@/helpers/UtilsHelper'
 import { API_URL, APP_DEBUG } from '@env'
 import { useNavigation } from '@react-navigation/native'
-import React, { use, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { StyleSheet, ScrollView, ActivityIndicator } from 'react-native'
 import Toast from 'react-native-toast-message'
 import { RouteProp } from '@react-navigation/native'
 import { RootStackParamList } from '@/navigation/types'
-import { Appbar, Button, Dialog, Portal, Text, Tooltip } from 'react-native-paper'
+import { Appbar, Tooltip } from 'react-native-paper'
 
 type NoteEditRouteProp = RouteProp<RootStackParamList, 'NoteEdit'>;
 
@@ -185,7 +185,8 @@ export default EditNoteScreen;
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 20,
-    paddingHorizontal: 15,
+    padding: 15,
+    backgroundColor: '#fff',
+    flex: 1,
   }
 });

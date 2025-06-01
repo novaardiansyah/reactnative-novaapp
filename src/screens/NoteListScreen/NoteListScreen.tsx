@@ -82,7 +82,7 @@ const NoteListScreen = (props: NoteListScreenProps) => {
 
   return (
     <View style={styles.container}>
-      <CustomAppBar title="Daftar Catatan" style={{ borderBottomWidth: 0.5, borderBottomColor: '#ddd' }}>
+      <CustomAppBar title="Daftar Catatan">
         <Appbar.Action icon="plus-circle-outline" onPress={onAddPressed} size={22} />
         { showSearch ? (
             <Tooltip title="Tutup pencarian" enterTouchDelay={200}>
