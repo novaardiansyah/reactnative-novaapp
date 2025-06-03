@@ -20,6 +20,8 @@ const NoteListScreen = (props: NoteListScreenProps) => {
   const searchRef = useRef<TextInput>(null)
   const [loading, setLoading] = useState(true)
   const [showSearch, setShowSearch] = useState(false)
+  const [refreshing, setRefreshing] = useState(false)
+  const listRef = useRef<FlatList>(null)
 
   const fetchData = async (searchKeyword?: string) => {
     const method = 'GET'
@@ -111,6 +113,7 @@ const NoteListScreen = (props: NoteListScreenProps) => {
 
       <FlatList 
         data={data}
+        ref={listRef}
         style={{ flex: 1, flexGrow: 1 }}
         keyExtractor={(item) => item.id.toString()}
         showsVerticalScrollIndicator={false}
@@ -118,6 +121,11 @@ const NoteListScreen = (props: NoteListScreenProps) => {
         maxToRenderPerBatch={10}
         initialNumToRender={8}
         renderItem={renderItem}
+        onRefresh={() => {
+          setRefreshing(true)
+          fetchData().finally(() => setRefreshing(false))
+        }}
+        refreshing={refreshing}
         ListEmptyComponent={() => (
           loading ? (
             <ActivityIndicator size={25} color="#3366FF" style={{ marginTop: 20 }} />
