@@ -73,7 +73,7 @@ export async function getKeychain(key: string): Promise<string | null> {
     console.error('Error getting key chain:', error);
     return null;
   }
-};
+}
 
 export async function removeKeychain(key: string): Promise<boolean> {
   try {
