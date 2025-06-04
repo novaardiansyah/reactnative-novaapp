@@ -46,9 +46,9 @@ const SignInScreen = () => {
     const checkIp = await safeRequest({ url: 'https://api.ipify.org?format=json' })
     const ip = checkIp?.data?.ip || '::1';
     
-    data = { ...data, ip }
+    const enrichedData = { ...data, ip }
 
-    let auth = await login(data)
+    let auth = await login(enrichedData)
     setLoading(false) 
 
     if (auth.status !== 200) {
