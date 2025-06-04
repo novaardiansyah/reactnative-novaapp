@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import * as Keychain from 'react-native-keychain';
 
 type ApiResponse<T = any> = {
   status: number | undefined;
@@ -50,3 +51,36 @@ export async function toIndonesianDate(dateString: string, format?: ToIndonesian
 export function stripHtml(html: string): string {
   return html ? html.replace(/<[^>]+>/g, '') : '';
 }
+
+export async function saveKeychain(key: string, value: string): Promise<boolean> {
+  try {
+    await Keychain.setGenericPassword(key, value, { service: key });
+    return true;
+  } catch (error) {
+    console.error('Error saving key chain:', error);
+    return false;
+  }
+}
+
+export async function getKeychain(key: string): Promise<string | null> {
+  try {
+    const credentials = await Keychain.getGenericPassword({ service: key });
+    if (credentials) {
+      return credentials.password;
+    }
+    return null;
+  } catch (error) {
+    console.error('Error getting key chain:', error);
+    return null;
+  }
+};
+
+export async function removeKeychain(key: string): Promise<boolean> {
+  try {
+    await Keychain.resetGenericPassword({ service: key });
+    return true;
+  } catch (error) {
+    console.error('Error removing getting key chain:', error);
+    return false;
+  }
+};

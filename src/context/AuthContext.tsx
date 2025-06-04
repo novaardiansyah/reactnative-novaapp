@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL, APP_DEBUG } from '@env';
-import { safeRequest } from '@/helpers/UtilsHelper';
+import { removeKeychain, safeRequest, saveKeychain } from '@/helpers/UtilsHelper';
 
 type User = {
   id: number;
@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }: React.PropsWithChildren<{}>) => {
       return { status: result?.status, data: error }
     }
 
-    const { access_token, expires_at } = result.data
+    const { access_token, refresh_token, expires_at } = result.data
 
     await AsyncStorage.setItem('access_token', access_token)
 
@@ -45,11 +45,11 @@ export const AuthProvider = ({ children }: React.PropsWithChildren<{}>) => {
       url: `${API_URL}/auth/me`,
       method: 'get',
     })
-    // console.log(userData)
 
     const auth = { ...userData.data, token: access_token, token_expires_at: expires_at }
     setUser(auth)
 
+    await saveKeychain('refresh_token', refresh_token)
     await AsyncStorage.setItem('user', JSON.stringify(auth))
 
     return { status: result.status, data: auth }
@@ -69,7 +69,9 @@ export const AuthProvider = ({ children }: React.PropsWithChildren<{}>) => {
     }
 
     setUser(null)
+
     await AsyncStorage.multiRemove(['user', 'access_token', 'confirmSignUp'])
+    await removeKeychain('refresh_token')
 
     return { status: result.status, data: result.data }
   };
