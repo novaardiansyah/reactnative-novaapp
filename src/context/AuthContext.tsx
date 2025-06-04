@@ -63,11 +63,6 @@ export const AuthProvider = ({ children }: React.PropsWithChildren<{}>) => {
       method: 'post',
     })
 
-    if (result?.status !== 200) {
-      let error = result?.data || { message: 'Something went wrong' }
-      return { status: result?.status, data: error }
-    }
-
     setUser(null)
 
     await AsyncStorage.multiRemove(['user', 'access_token', 'confirmSignUp'])

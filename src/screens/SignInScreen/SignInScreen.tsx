@@ -43,6 +43,11 @@ const SignInScreen = () => {
     console.log('onSignInPressed()')
     setLoading(true)
 
+    const checkIp = await safeRequest({ url: 'https://api.ipify.org?format=json' })
+    const ip = checkIp?.data?.ip || '::1';
+    
+    data = { ...data, ip }
+
     let auth = await login(data)
     setLoading(false) 
 
