@@ -80,7 +80,7 @@ export async function removeKeychain(key: string): Promise<boolean> {
     await Keychain.resetGenericPassword({ service: key });
     return true;
   } catch (error) {
-    console.error('Error removing getting key chain:', error);
+    console.error('Error removing keychain:', error);
     return false;
   }
 };
