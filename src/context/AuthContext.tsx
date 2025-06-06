@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL, APP_DEBUG } from '@env';
 import { removeKeychain, safeRequest, saveKeychain } from '@/helpers/UtilsHelper';
 import { setLogoutCallback } from '@/helpers/AuthEvent';
+import Toast from 'react-native-toast-message';
 
 type User = {
   id: number;
@@ -67,6 +68,13 @@ export const AuthProvider = ({ children }: React.PropsWithChildren<{}>) => {
 
     await AsyncStorage.multiRemove(['user', 'access_token', 'access_token_expires_at', 'confirmSignUp'])
     await removeKeychain('refresh_token')
+
+    Toast.show({
+      type: 'success',
+      text1: 'Your session has ended!',
+      text2: 'You have been logged out successfully.',
+      visibilityTime: 4000,
+    })
 
     return { status: result.status, data: result.data }
   };
