@@ -135,3 +135,7 @@ export async function removeKeychain(key: string): Promise<boolean> {
     return false
   }
 }
+
+export function logger(...args: any[]): void {
+  if (APP_DEBUG) console.log(...args)
+}
