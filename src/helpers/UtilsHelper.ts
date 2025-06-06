@@ -105,7 +105,7 @@ export async function saveKeychain(key: string, value: string): Promise<boolean>
     await Keychain.setGenericPassword(key, value, { service: key })
     return true
   } catch (error) {
-    console.error('Error saving key chain:', error)
+    console.error('Error saving keychain:', error)
     return false
   }
 }
