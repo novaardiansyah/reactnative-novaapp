@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 import * as Keychain from 'react-native-keychain'
-import { API_URL } from '@env'
+import { API_URL, APP_DEBUG } from '@env'
 import { triggerLogout } from './AuthEvent'
 
 type ApiResponse<T = any> = {
@@ -16,6 +16,8 @@ async function refreshToken(): Promise<boolean> {
   }
 
   try {
+    if (APP_DEBUG) console.log('Refreshing token...')
+
     const access_token = await AsyncStorage.getItem('access_token')
     const refresh_token = await getKeychain('refresh_token')
 
@@ -74,6 +76,7 @@ export async function safeRequest<T = any>(
       if (refreshed) {
         return safeRequest(config, false)
       } else {
+        if (APP_DEBUG) console.log('Token refresh failed, triggering logout...')
         triggerLogout()
       }
     }
