@@ -42,7 +42,7 @@ const EditNoteScreen = (props: EditNoteScreenProps) => {
     });
 
     if (result.status !== 200) {
-      if (APP_DEBUG) console.error('Error fetching data:', result)
+      if (APP_DEBUG) console.debug('Error fetching data:', result)
       
       Toast.show({
         type: 'error',

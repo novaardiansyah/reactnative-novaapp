@@ -41,7 +41,7 @@ const NoteListScreen = (props: NoteListScreenProps) => {
     setLoading(false)
 
     if (result.status !== 200) {
-      if (APP_DEBUG) console.error('Error fetching data:', result)
+      if (APP_DEBUG) console.debug('Error fetching data:', result)
       return
     }
 

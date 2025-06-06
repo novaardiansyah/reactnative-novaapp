@@ -2,6 +2,7 @@ import React, { createContext, useState, useEffect, useContext } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL, APP_DEBUG } from '@env';
 import { removeKeychain, safeRequest, saveKeychain } from '@/helpers/UtilsHelper';
+import { setLogoutCallback } from '@/helpers/AuthEvent';
 
 type User = {
   id: number;
@@ -10,8 +11,6 @@ type User = {
   email_verified_at: string;
   created_at: string;
   updated_at: string;
-  token: string;
-  token_expires_at: string;
 };
 
 export const AuthContext = createContext({
@@ -40,13 +39,14 @@ export const AuthProvider = ({ children }: React.PropsWithChildren<{}>) => {
     const { access_token, refresh_token, expires_at } = result.data
 
     await AsyncStorage.setItem('access_token', access_token)
+    await AsyncStorage.setItem('access_token_expires_at', expires_at)
 
     const userData = await safeRequest({
       url: `${API_URL}/auth/me`,
       method: 'get',
     })
 
-    const auth = { ...userData.data, token: access_token, token_expires_at: expires_at }
+    const auth = userData.data as User;
     setUser(auth)
 
     await saveKeychain('refresh_token', refresh_token)
@@ -65,7 +65,7 @@ export const AuthProvider = ({ children }: React.PropsWithChildren<{}>) => {
 
     setUser(null)
 
-    await AsyncStorage.multiRemove(['user', 'access_token', 'confirmSignUp'])
+    await AsyncStorage.multiRemove(['user', 'access_token', 'access_token_expires_at', 'confirmSignUp'])
     await removeKeychain('refresh_token')
 
     return { status: result.status, data: result.data }
@@ -84,19 +84,12 @@ export const AuthProvider = ({ children }: React.PropsWithChildren<{}>) => {
   };
 
   useEffect(() => {
-    loadUser();
-
-    if (user) {
-      // ! '12/5/2025 16.32.50'
-      let token_expires_at = new Date(user.token_expires_at).toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' })
-      let now = new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' })
-      
-      const hasExpired = token_expires_at < now
-      
-      // Todo: logout if expired (create custom page and tell user that their session has expired)
-      if (hasExpired) logout()
-    }
+    loadUser()
   }, []);
+
+  useEffect(() => {
+    setLogoutCallback(logout)
+  }, [logout])
 
   return (
     <AuthContext.Provider value={{ user, login, logout }}>
