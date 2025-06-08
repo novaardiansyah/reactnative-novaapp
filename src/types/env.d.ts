@@ -4,4 +4,5 @@ declare module '@env' {
   export const APP_ENV: 'dev' | 'prod';
   export const APP_DEBUG: boolean;
   export const APP_VERSION: string;
+  export const ADMIN_URL: string;
 }

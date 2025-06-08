@@ -1,4 +1,3 @@
-import { CustomAppBar } from '@/components/CustomPaper'
 import { logger, safeRequest } from '@/helpers/UtilsHelper'
 import { API_URL, APP_DEBUG } from '@env'
 import { useNavigation } from '@react-navigation/native'
@@ -9,6 +8,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { RootStackParamList } from '@/navigation/types'
 import NoteListItem from './atoms/NoteListItem'
 import { NoteItemType } from './atoms/types'
+import { CustomListHeader } from '@/components/CustomListHeader'
 
 interface NoteListScreenProps {}
 
@@ -17,7 +17,7 @@ type NoteListScreenNavigationProp = NativeStackNavigationProp<RootStackParamList
 const NoteListScreen = (props: NoteListScreenProps) => {
   const navigation = useNavigation<NoteListScreenNavigationProp>()
   const [data, setData] = useState<any[]>([])
-  const searchRef = useRef<TextInput>(null)
+  const searchRef = useRef<TextInput>(null) as React.RefObject<TextInput>
   const [loading, setLoading] = useState(true)
   const [showSearch, setShowSearch] = useState(false)
   const [refreshing, setRefreshing] = useState(false)
@@ -114,32 +114,16 @@ const NoteListScreen = (props: NoteListScreenProps) => {
 
   return (
     <View style={styles.container}>
-      <CustomAppBar title="Daftar Catatan">
-        <Appbar.Action icon="plus-circle-outline" onPress={onAddPressed} size={22} />
-        { showSearch ? (
-            <Tooltip title="Tutup pencarian" enterTouchDelay={200}>
-              <Appbar.Action icon="close" onPress={closeSearchBar} size={22} />
-            </Tooltip>
-          ) : (
-            <Tooltip title="Cari data" enterTouchDelay={200}>
-              <Appbar.Action icon="magnify" onPress={() => setShowSearch(true)} size={22} />
-            </Tooltip>
-          )
-        }
-      </CustomAppBar>
-
-      { showSearch && (
-          <View style={{ padding: 10, backgroundColor: '#fff' }}>
-            <TextInput
-              placeholder="Ketik untuk mencari..."
-              autoFocus
-              onSubmitEditing={(event) => handleSearch(event.nativeEvent.text)}
-              ref={searchRef}
-              style={styles.searchBar}
-            />
-          </View>
-        )
-      }
+      <CustomListHeader 
+        title="Daftar Catatan"
+        hasAddButton={true}
+        onAddPressed={onAddPressed}
+        handleSearch={handleSearch} 
+        closeSearchBar={closeSearchBar} 
+        setShowSearch={setShowSearch} 
+        showSearch={showSearch} 
+        searchRef={searchRef} 
+      />
 
       <FlatList 
         data={data}
@@ -179,12 +163,4 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-
-  searchBar: {
-    height: 40, 
-    borderColor: '#ccc', 
-    borderWidth: 1, 
-    borderRadius: 5, 
-    paddingHorizontal: 10 
-  }
 })

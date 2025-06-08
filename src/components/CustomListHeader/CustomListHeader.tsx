@@ -4,7 +4,8 @@ import { Appbar, Tooltip } from 'react-native-paper'
 
 interface CustomListHeaderProps {
   title: string
-  onAddPressed: () => void
+  hasAddButton?: boolean
+  onAddPressed?: () => void
   setShowSearch: (value: boolean) => void
   closeSearchBar: () => void
   handleSearch: (value: string) => void,
@@ -13,12 +14,14 @@ interface CustomListHeaderProps {
 }
 
 const CustomListHeader = (props: CustomListHeaderProps) => {
-  const { title, onAddPressed, setShowSearch, closeSearchBar , handleSearch, searchRef, showSearch } = props
+  const { title, onAddPressed, setShowSearch, closeSearchBar , handleSearch, searchRef, showSearch, hasAddButton } = props
 
   return (
     <>
       <CustomAppBar title={title}>
-        <Appbar.Action icon="plus-circle-outline" onPress={onAddPressed} size={22} />
+        { hasAddButton && 
+          <Appbar.Action icon="plus-circle-outline" onPress={onAddPressed} size={22} />
+        }
 
         { showSearch ? (
             <Tooltip title="Tutup pencarian" enterTouchDelay={200}>
