@@ -5,23 +5,28 @@ import { Avatar, List } from 'react-native-paper';
 import Logo from '@/assets/images/logo-circle.png'
 import { useNavigation } from '@react-navigation/native';
 import { CustomCard, CustomTouchableRipple } from '@/components/CustomPaper';
+import { RootStackParamList } from '@/navigation/types'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 interface HomeScreenProps {}
 
+type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>
+
 const HomeScreen = (props: HomeScreenProps) => {
   const { user } = useContext(AuthContext)
-  const navigation = useNavigation()
-
-  const onNoteListPressed = () => {
-    navigation.navigate('NoteList' as never)
-  }
+  const navigation = useNavigation<HomeScreenNavigationProp>()
 
   const menus = [
     {
       title: 'Daftar Catatan',
       icon: 'file-document-outline',
-      onPress: () => onNoteListPressed(),
+      onPress: () => navigation.navigate('NoteList'),
     },
+    {
+      title: 'Akun Kas',
+      icon: 'cash-multiple',
+      onPress: () => navigation.navigate('PaymentAccount'),
+    }
   ];
 
   return (
@@ -47,7 +52,7 @@ const HomeScreen = (props: HomeScreenProps) => {
               <List.Item
                 title={menu.title}
                 left={props => <List.Icon {...props} icon={menu.icon} />}
-                right={props => <List.Icon {...props} icon="chevron-right" />}
+                right={props => <List.Icon {...props} icon="chevron-right" style={styles.listItemRight} />}
                 titleStyle={{ fontSize: 14 , marginLeft: -6 }}
               />
             </CustomTouchableRipple>
@@ -64,5 +69,10 @@ const styles = StyleSheet.create({
   container: {
     paddingVertical: 20,
     paddingHorizontal: 15,
-  }
+  },
+  listItemRight: {
+    marginRight: -10,
+    paddingLeft: 10,
+    alignSelf: 'center',
+  },
 });
