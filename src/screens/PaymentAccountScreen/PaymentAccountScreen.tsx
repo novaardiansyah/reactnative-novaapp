@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center', 
     alignItems: 'center', 
     marginTop: 15, 
-    gap: 10
+    marginBottom: 10
   },
   title: {
     fontSize: 14, 
