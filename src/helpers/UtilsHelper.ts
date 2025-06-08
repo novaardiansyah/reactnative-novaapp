@@ -87,8 +87,8 @@ export async function safeRequest<T = any>(
 
 export interface ToIndonesianDateOptions extends Intl.DateTimeFormatOptions {}
 
-export async function toIndonesianDate(dateString: string, format?: ToIndonesianDateOptions): Promise<string> {
-  return new Date(dateString).toLocaleDateString('id-ID', {
+export function toIndonesianDate(date: Date, format?: ToIndonesianDateOptions): string {
+  return new Date(date).toLocaleDateString('id-ID', {
     weekday: 'long',
     day: '2-digit',
     month: 'short',
