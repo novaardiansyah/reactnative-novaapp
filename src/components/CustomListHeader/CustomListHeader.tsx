@@ -1,4 +1,3 @@
-import { } from 'react'
 import { Text, View, StyleSheet, TextInput } from 'react-native'
 import { CustomAppBar } from '@/components/CustomPaper'
 import { Appbar, Tooltip } from 'react-native-paper'
