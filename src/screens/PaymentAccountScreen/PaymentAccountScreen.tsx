@@ -78,7 +78,7 @@ const PaymentAccountScreen = (props: PaymentAccountScreenProps) => {
               <List.Item
                 title={item.name}
                 description={`${toIndonesianDate(item.updated_at, { weekday: 'short' })}`}
-                descriptionStyle={{ fontSize: 12 }}
+                descriptionStyle={styles.description}
                 left={props => (
                   <Avatar.Image 
                     {...props} 
@@ -88,7 +88,7 @@ const PaymentAccountScreen = (props: PaymentAccountScreenProps) => {
                   />
                 )}
                 right={props => (
-                  <View style={styles.listItemRight} {...props}>
+                  <View style={styles.listItemRight}>
                     <Text style={styles.depositText}>
                       {`Rp${item.deposit.toLocaleString('id-ID')}`}
                     </Text>
@@ -122,8 +122,11 @@ const styles = StyleSheet.create({
     fontSize: 14, 
     fontWeight: 'bold',
   },
+  description: {
+    fontSize: 12
+  },
   listItemRight: {
-    marginRight: -5,
+    marginRight: -6,
     paddingLeft: 10,
     alignSelf: 'center',
   },
