@@ -5,4 +5,5 @@ export type RootStackParamList = {
   NoteEdit: { id: number };
   GeneralSetting: undefined;
   PrivacyPolicy: undefined;
+  PaymentAccount: undefined;
 };
