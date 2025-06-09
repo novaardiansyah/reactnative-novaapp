@@ -5,6 +5,9 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { StyleSheet, ScrollView, TextInput, View, RefreshControl } from 'react-native'
 import { ActivityIndicator, Text } from 'react-native-paper'
 import PaymentAccountItem from './atoms/PaymentAccountItem'
+import { RootStackParamList } from '@/navigation/types'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { useNavigation } from '@react-navigation/native'
 
 interface PaymentAccountScreenProps {}
 
@@ -17,7 +20,10 @@ interface PaymentAccountData {
   updated_at: Date
 }
 
+type PaymentAccountScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>
+
 const PaymentAccountScreen = (props: PaymentAccountScreenProps) => {
+  const navigation = useNavigation<PaymentAccountScreenNavigationProp>()
   const [showSearch, setShowSearch] = useState(false)
   const searchRef = useRef<TextInput>(null) as React.RefObject<TextInput>
   const [data, setData] = useState<PaymentAccountData[]>([])
@@ -58,6 +64,10 @@ const PaymentAccountScreen = (props: PaymentAccountScreenProps) => {
     console.debug('Search:', value)
   }
 
+  const handleOnPress = (id: number) => {
+    navigation.navigate('EditPaymentAccount', { id })
+  }
+
   return (
     <>
       <CustomListHeader 
@@ -88,18 +98,23 @@ const PaymentAccountScreen = (props: PaymentAccountScreenProps) => {
           )
         }
 
-        { data.length > 0 ? (
+        {
+          data.length === 0 && !loading && (
+            <View style={styles.loading}>
+              <Text style={styles.loadingText}>Tidak ada akun kas yang ditemukan.</Text>
+            </View>
+          )
+        }
+
+        { data.length > 0 && (
             data.map((item) => (
               <PaymentAccountItem 
                 key={item.id}
                 item={item}
                 refreshing={refreshing}
+                handleOnPress={() => handleOnPress(item.id)}
               />
             ))
-          ) : (
-            <View style={styles.loading}>
-              <Text style={styles.loadingText}>Tidak ada akun kas yang ditemukan.</Text>
-            </View>
           )
         }
       </ScrollView>
