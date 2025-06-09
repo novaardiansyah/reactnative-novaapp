@@ -1,14 +1,14 @@
-import { CustomAppBar, CustomDialog, CustomFormSection, CustomTextInput } from '@/components/CustomPaper'
+import { CustomFormSection, CustomTextInput } from '@/components/CustomPaper'
 import { safeRequest, stripHtml } from '@/helpers/UtilsHelper'
 import { API_URL, APP_DEBUG } from '@env'
 import { useNavigation } from '@react-navigation/native'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { StyleSheet, ScrollView, ActivityIndicator } from 'react-native'
+import { StyleSheet, ScrollView } from 'react-native'
 import Toast from 'react-native-toast-message'
 import { RouteProp } from '@react-navigation/native'
 import { RootStackParamList } from '@/navigation/types'
-import { Appbar, Tooltip } from 'react-native-paper'
+import { CustomFormHeader } from '@/components/CustomListHeader'
 
 type NoteEditRouteProp = RouteProp<RootStackParamList, 'NoteEdit'>;
 
@@ -137,27 +137,16 @@ const EditNoteScreen = (props: EditNoteScreenProps) => {
 
   return (
     <>
-      <CustomAppBar title="Edit Daftar Catatan">
-        {
-          loading ? (
-            <ActivityIndicator size={22} animating color="#6690ff" style={{ alignSelf: 'center', marginRight: 12 }} />
-          ) : (
-            <Tooltip title="Hapus data" enterTouchDelay={200}>
-              <Appbar.Action icon="trash-can-outline" iconColor="#ff4e30" onPress={() => setConfirmDelete(true)} size={22} />
-            </Tooltip>
-          )
-        }
-      </CustomAppBar>
+      <CustomFormHeader 
+        title="Edit Daftar Catatan"
+        formType="edit"
+        loading={loading}
+        setConfirmDelete={setConfirmDelete} 
+        confirmDelete={confirmDelete} 
+        onDeletePressed={onDeletePressed}
+      />
       
       <ScrollView style={styles.container}>
-        <CustomDialog 
-          textBody="Apakah Anda yakin ingin menghapus catatan ini? data yang dihapus tidak dapat dipulihkan."
-          actionText="Hapus" 
-          visible={confirmDelete} 
-          setVisible={setConfirmDelete} 
-          onActionPressed={onDeletePressed}
-        />
-
         <CustomFormSection formType="edit" addOrEditAction={handleSubmit(onSavePressed)} loading={loading} key={formKey}>
           <CustomTextInput 
             name="title"

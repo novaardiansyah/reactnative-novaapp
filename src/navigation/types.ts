@@ -6,5 +6,6 @@ export type RootStackParamList = {
   GeneralSetting: undefined;
   PrivacyPolicy: undefined;
   PaymentAccount: undefined;
+  AddPaymentAccount: undefined;
   EditPaymentAccount: { id: number };
 };

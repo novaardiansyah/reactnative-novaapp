@@ -24,7 +24,7 @@ const CustomFormSection = (props: CustomFormSectionProps) => {
       <View style={styles.buttonGroups}>
         {
           props.loading ? (
-            <Button mode="contained" buttonColor="#6690ff" style={styles.button}>
+            <Button mode="contained" buttonColor="#3366FF" style={styles.button}>
               <ActivityIndicator color="#fff" size={12} style={{ paddingRight: 5 }} /> Proses...
             </Button>
           ) : (

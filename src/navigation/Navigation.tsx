@@ -14,6 +14,7 @@ import EditNoteScreen from '@/screens/NoteListScreen/EditNoteScreen'
 import { RootStackParamList } from './types'
 import { GeneralSetting, PrivacyPolicy } from '@/screens/GeneralSetting'
 import { EditPaymentAccountScreen, PaymentAccountScreen } from '@/screens/PaymentAccountScreen'
+import AddPaymentAccountScreen from '@/screens/PaymentAccountScreen/AddPaymentAccountScreen'
 
 const Stack = createNativeStackNavigator()
 
@@ -39,8 +40,12 @@ const MainStack = () => (
         <RootStack.Screen name="NoteEdit" component={EditNoteScreen} />
         <RootStack.Screen name="GeneralSetting" component={GeneralSetting} />
         <RootStack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
+
         <RootStack.Screen name="PaymentAccount" component={PaymentAccountScreen} />
+        <RootStack.Screen name="AddPaymentAccount" component={AddPaymentAccountScreen} />
         <RootStack.Screen name="EditPaymentAccount" component={EditPaymentAccountScreen} />
+
+
       </RootStack.Navigator>
     </NavigationContainer>
   </Provider>
