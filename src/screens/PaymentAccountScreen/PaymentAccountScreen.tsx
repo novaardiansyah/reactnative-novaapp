@@ -1,10 +1,9 @@
 import { CustomListHeader } from '@/components/CustomListHeader'
-import { CustomTouchableRipple } from '@/components/CustomPaper'
-import { logger, safeRequest, toIndonesianDate } from '@/helpers/UtilsHelper'
-import { ADMIN_URL, API_URL } from '@env'
-import React, { useEffect, useRef, useState } from 'react'
-import { StyleSheet, ScrollView, TextInput, View } from 'react-native'
-import { ActivityIndicator, Avatar, List, Text } from 'react-native-paper'
+import { logger, safeRequest } from '@/helpers/UtilsHelper'
+import { API_URL } from '@env'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { StyleSheet, ScrollView, TextInput, View, RefreshControl } from 'react-native'
+import { ActivityIndicator, Text } from 'react-native-paper'
 import PaymentAccountItem from './atoms/PaymentAccountItem'
 
 interface PaymentAccountScreenProps {}
@@ -23,6 +22,7 @@ const PaymentAccountScreen = (props: PaymentAccountScreenProps) => {
   const searchRef = useRef<TextInput>(null) as React.RefObject<TextInput>
   const [data, setData] = useState<PaymentAccountData[]>([])
   const [loading, setLoading] = useState(true)
+  const [refreshing, setRefreshing] = useState(false)
 
   const fetchData = async () => {
     const method = 'GET'
@@ -44,6 +44,11 @@ const PaymentAccountScreen = (props: PaymentAccountScreenProps) => {
     fetchData().finally(() => setLoading(false))
   }, [])
 
+  const onRefresh = useCallback(() => {
+    setRefreshing(true)
+    fetchData().finally(() => setRefreshing(false))
+  }, [fetchData])
+
   const closeSearchBar = async () => {
     console.debug('Closing search bar')
     setShowSearch(false)
@@ -64,7 +69,17 @@ const PaymentAccountScreen = (props: PaymentAccountScreenProps) => {
         searchRef={searchRef} 
       />
 
-      <ScrollView style={styles.container}>
+      <ScrollView 
+        style={styles.container}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={['#3366FF']}
+            tintColor="#3366FF"
+          />
+        }
+      >
         { loading && (
             <View style={styles.loading}>
               <ActivityIndicator color="#3366FF" />
@@ -78,6 +93,7 @@ const PaymentAccountScreen = (props: PaymentAccountScreenProps) => {
               <PaymentAccountItem 
                 key={item.id}
                 item={item}
+                refreshing={refreshing}
               />
             ))
           ) : (

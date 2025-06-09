@@ -1,7 +1,7 @@
 import React from 'react'
 import { Text, View, StyleSheet } from 'react-native'
 import { CustomTouchableRipple } from '@/components/CustomPaper'
-import { Avatar, List } from 'react-native-paper'
+import { ActivityIndicator, Avatar, List } from 'react-native-paper'
 import { toIndonesianDate } from '@/helpers/UtilsHelper'
 import { ADMIN_URL } from '@env'
 
@@ -13,17 +13,20 @@ interface PaymentAccountItemProps {
     logo: string
     created_at: Date
     updated_at: Date
-  }
+  },
+  refreshing?: boolean
 }
 
 const PaymentAccountItem = (props: PaymentAccountItemProps) => {
-  const { item } = props
+  const { item, refreshing } = props
 
   return (
     <CustomTouchableRipple onPress={() => {}}>
       <List.Item
         title={item.name}
-        description={`${toIndonesianDate(item.updated_at, { weekday: 'short' })}`}
+        description={
+          refreshing ? '' : `${toIndonesianDate(item.updated_at, { weekday: 'short' })}`
+        }
         descriptionStyle={styles.description}
         left={props => (
           <Avatar.Image 
@@ -36,7 +39,7 @@ const PaymentAccountItem = (props: PaymentAccountItemProps) => {
         right={() => (
           <View style={styles.listItemRight}>
             <Text style={styles.depositText}>
-              {`Rp${item.deposit.toLocaleString('id-ID')}`}
+              { refreshing ? 'Rp0' : `Rp${item.deposit.toLocaleString('id-ID')}` }
             </Text>
           </View>
         )}
