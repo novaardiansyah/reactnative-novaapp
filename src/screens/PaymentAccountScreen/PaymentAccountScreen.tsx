@@ -20,7 +20,7 @@ interface PaymentAccountData {
   updated_at: Date
 }
 
-type PaymentAccountScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>
+type PaymentAccountScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'PaymentAccount'>
 
 const PaymentAccountScreen = (props: PaymentAccountScreenProps) => {
   const navigation = useNavigation<PaymentAccountScreenNavigationProp>()
