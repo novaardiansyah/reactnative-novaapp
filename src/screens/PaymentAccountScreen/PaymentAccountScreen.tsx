@@ -5,6 +5,7 @@ import { ADMIN_URL, API_URL } from '@env'
 import React, { useEffect, useRef, useState } from 'react'
 import { StyleSheet, ScrollView, TextInput, View } from 'react-native'
 import { ActivityIndicator, Avatar, List, Text } from 'react-native-paper'
+import PaymentAccountItem from './atoms/PaymentAccountItem'
 
 interface PaymentAccountScreenProps {}
 
@@ -67,37 +68,23 @@ const PaymentAccountScreen = (props: PaymentAccountScreenProps) => {
         { loading && (
             <View style={styles.loading}>
               <ActivityIndicator color="#3366FF" />
-              <Text>Memuat data...</Text>
+              <Text style={styles.loadingText}>Memuat data...</Text>
             </View>
           )
         }
 
-        {
-          data.map((item) => (
-            <CustomTouchableRipple onPress={() => {}} key={item.id}>
-              <List.Item
-                title={item.name}
-                description={`${toIndonesianDate(item.updated_at, { weekday: 'short' })}`}
-                descriptionStyle={styles.description}
-                left={props => (
-                  <Avatar.Image 
-                    {...props} 
-                    source={{ uri: `${ADMIN_URL}/storage/${item.logo}` }} 
-                    style={styles.listImage}
-                    size={40} 
-                  />
-                )}
-                right={props => (
-                  <View style={styles.listItemRight}>
-                    <Text style={styles.depositText}>
-                      {`Rp${item.deposit.toLocaleString('id-ID')}`}
-                    </Text>
-                  </View>
-                )}
-                titleStyle={styles.title}
+        { data.length > 0 ? (
+            data.map((item) => (
+              <PaymentAccountItem 
+                key={item.id}
+                item={item}
               />
-            </CustomTouchableRipple>
-          ))
+            ))
+          ) : (
+            <View style={styles.loading}>
+              <Text style={styles.loadingText}>Tidak ada akun kas yang ditemukan.</Text>
+            </View>
+          )
         }
       </ScrollView>
     </>
@@ -115,30 +102,9 @@ const styles = StyleSheet.create({
     flex: 1, 
     justifyContent: 'center', 
     alignItems: 'center', 
-    marginTop: 15, 
-    marginBottom: 10
+    marginTop: 15,
   },
-  title: {
-    fontSize: 14, 
-    fontWeight: 'bold',
-  },
-  description: {
-    fontSize: 12
-  },
-  listItemRight: {
-    marginRight: -6,
-    paddingLeft: 10,
-    alignSelf: 'center',
-  },
-  listImage: {
-    backgroundColor: 'transparent', 
-    marginLeft: 16
-  },
-  depositText: {
-    fontWeight: 'bold', 
-    fontSize: 14,
-    letterSpacing: 0.5,
-    textAlign: 'right',
-    color: '#0F6F3E',
+  loadingText: {
+    marginTop: 10, 
   },
 })
