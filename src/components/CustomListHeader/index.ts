@@ -1,2 +1,4 @@
 import CustomListHeader from './CustomListHeader'
-export { CustomListHeader }
+import CustomFormHeader from './CustomFormHeader'
+
+export { CustomListHeader, CustomFormHeader }

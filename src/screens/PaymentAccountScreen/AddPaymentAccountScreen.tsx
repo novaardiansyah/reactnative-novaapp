@@ -1,33 +1,22 @@
 import { CustomFormHeader } from '@/components/CustomListHeader'
 import { CustomFormSection, CustomTextInput } from '@/components/CustomPaper'
-import { RootStackParamList } from '@/navigation/types'
-import { RouteProp } from '@react-navigation/native'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { ScrollView, StyleSheet } from 'react-native'
 
-type PaymentAccountScreenNavigationProp = RouteProp<RootStackParamList, 'EditPaymentAccount'>
-
-interface EditPaymentAccountScreenProps {
-  route: PaymentAccountScreenNavigationProp;
-}
+interface AddPaymentAccountScreenProps {}
 
 interface FormData {
   name: string
   deposit: number
 }
 
-const EditPaymentAccountScreen = (props: EditPaymentAccountScreenProps) => {
-  const { id } = props.route.params
+const AddPaymentAccountScreen = (props: AddPaymentAccountScreenProps) => {
   const [loading, setLoading] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
   
   const { control, handleSubmit, setError, setValue, reset } = useForm<FormData>()
   const [formKey, setFormKey] = useState(0)
-
-  const onDeletePressed = async () => {
-    console.debug('onDeletePressed() called for ID:', id)
-  }
 
   const onSavePressed = async (data: FormData) => {
     console.debug('onSavePressed() called with data:', data)
@@ -36,16 +25,12 @@ const EditPaymentAccountScreen = (props: EditPaymentAccountScreenProps) => {
   return (
     <>
       <CustomFormHeader 
-        title="Edit Akun Kas"
-        formType="edit"
-        loading={loading}
-        setConfirmDelete={setConfirmDelete} 
-        confirmDelete={confirmDelete} 
-        onDeletePressed={onDeletePressed}
+        title="Buat Akun Kas"
+        formType="create"
       />
 
       <ScrollView style={styles.container}>
-        <CustomFormSection formType="edit" addOrEditAction={handleSubmit(onSavePressed)} loading={loading} key={formKey}>
+        <CustomFormSection formType="add" addOrEditAction={handleSubmit(onSavePressed)} loading={loading} key={formKey}>
           <CustomTextInput 
             name="name"
             label="Nama Akun" 
@@ -65,7 +50,7 @@ const EditPaymentAccountScreen = (props: EditPaymentAccountScreenProps) => {
   )
 }
 
-export default EditPaymentAccountScreen
+export default AddPaymentAccountScreen
 
 const styles = StyleSheet.create({
   container: {

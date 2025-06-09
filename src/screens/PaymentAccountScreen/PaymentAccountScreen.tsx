@@ -64,14 +64,20 @@ const PaymentAccountScreen = (props: PaymentAccountScreenProps) => {
     console.debug('Search:', value)
   }
 
-  const handleOnPress = useCallback((id: number) => {
+  const onEditPressed = useCallback((id: number) => {
     navigation.navigate('EditPaymentAccount', { id })
+  }, [navigation])
+
+  const onAddPressed = useCallback(() => {
+    navigation.navigate('AddPaymentAccount')
   }, [navigation])
 
   return (
     <>
       <CustomListHeader 
         title="Daftar Akun Kas"
+        hasAddButton
+        onAddPressed={onAddPressed}
         handleSearch={handleSearch} 
         closeSearchBar={closeSearchBar} 
         setShowSearch={setShowSearch} 
@@ -112,7 +118,7 @@ const PaymentAccountScreen = (props: PaymentAccountScreenProps) => {
                 key={item.id}
                 item={item}
                 refreshing={refreshing}
-                handleOnPress={() => handleOnPress(item.id)}
+                handleOnPress={() => onEditPressed(item.id)}
               />
             ))
           )
