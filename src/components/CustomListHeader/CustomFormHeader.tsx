@@ -23,7 +23,10 @@ const CustomFormHeader = (props: CustomFormHeaderProps) => {
   const { title, formType = 'create' } = props
   const isEdit = formType === 'edit'
 
-  const { loading, confirmDelete, setConfirmDelete, onDeletePressed } = props as EditFormHeaderProps
+  let loading, confirmDelete, setConfirmDelete, onDeletePressed
+  if (isEdit) {
+    ({ loading, confirmDelete, setConfirmDelete, onDeletePressed } = props as EditFormHeaderProps)
+  }
 
   return (
     <>
