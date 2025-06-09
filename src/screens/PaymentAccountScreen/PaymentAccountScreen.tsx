@@ -64,9 +64,9 @@ const PaymentAccountScreen = (props: PaymentAccountScreenProps) => {
     console.debug('Search:', value)
   }
 
-  const handleOnPress = (id: number) => {
+  const handleOnPress = useCallback((id: number) => {
     navigation.navigate('EditPaymentAccount', { id })
-  }
+  }, [navigation])
 
   return (
     <>
