@@ -24,7 +24,7 @@ const PaymentAccountScreen = (props: PaymentAccountScreenProps) => {
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     const method = 'GET'
     let url = `${API_URL}/payment-accounts`
     const result = await safeRequest({ url, method })
@@ -38,11 +38,11 @@ const PaymentAccountScreen = (props: PaymentAccountScreenProps) => {
     logger('Fetched payment accounts', { data })  
 
     setData(data || [])
-  }
+  }, [])
 
   useEffect(() => {
     fetchData().finally(() => setLoading(false))
-  }, [])
+  }, [fetchData])
 
   const onRefresh = useCallback(() => {
     setRefreshing(true)
