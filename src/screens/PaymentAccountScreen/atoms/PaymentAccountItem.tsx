@@ -15,13 +15,14 @@ interface PaymentAccountItemProps {
     updated_at: Date
   },
   refreshing?: boolean
+  handleOnPress: () => void
 }
 
 const PaymentAccountItem = (props: PaymentAccountItemProps) => {
-  const { item, refreshing } = props
+  const { item, refreshing, handleOnPress } = props
 
   return (
-    <CustomTouchableRipple onPress={() => {}}>
+    <CustomTouchableRipple onPress={handleOnPress}>
       <List.Item
         title={item.name}
         description={

@@ -1,3 +1,4 @@
 import PaymentAccountScreen from './PaymentAccountScreen'
+import EditPaymentAccountScreen from './EditPaymentAccountScreen'
 
-export { PaymentAccountScreen }
+export { PaymentAccountScreen, EditPaymentAccountScreen }

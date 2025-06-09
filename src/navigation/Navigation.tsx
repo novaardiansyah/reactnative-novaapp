@@ -13,7 +13,7 @@ import { Provider } from 'react-native-paper'
 import EditNoteScreen from '@/screens/NoteListScreen/EditNoteScreen'
 import { RootStackParamList } from './types'
 import { GeneralSetting, PrivacyPolicy } from '@/screens/GeneralSetting'
-import { PaymentAccountScreen } from '@/screens/PaymentAccountScreen'
+import { EditPaymentAccountScreen, PaymentAccountScreen } from '@/screens/PaymentAccountScreen'
 
 const Stack = createNativeStackNavigator()
 
@@ -40,6 +40,7 @@ const MainStack = () => (
         <RootStack.Screen name="GeneralSetting" component={GeneralSetting} />
         <RootStack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
         <RootStack.Screen name="PaymentAccount" component={PaymentAccountScreen} />
+        <RootStack.Screen name="EditPaymentAccount" component={EditPaymentAccountScreen} />
       </RootStack.Navigator>
     </NavigationContainer>
   </Provider>
