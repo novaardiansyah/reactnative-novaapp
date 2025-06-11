@@ -47,8 +47,14 @@ const PaymentAccountScreen = (props: PaymentAccountScreenProps) => {
   }, [])
 
   useEffect(() => {
-    fetchData().finally(() => setLoading(false))
-  }, [fetchData])
+    const unsubscribe = navigation.addListener('focus', () => {
+      logger('PaymentAccountScreen focused.')
+      setLoading(true)
+      fetchData().finally(() => setLoading(false))
+    })
+
+    return unsubscribe
+  }, [navigation, fetchData])
 
   const onRefresh = useCallback(() => {
     setRefreshing(true)
