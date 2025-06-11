@@ -49,6 +49,7 @@ const PaymentAccountScreen = (props: PaymentAccountScreenProps) => {
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       logger('PaymentAccountScreen focused.')
+      setLoading(true)
       fetchData().finally(() => setLoading(false))
     })
 
