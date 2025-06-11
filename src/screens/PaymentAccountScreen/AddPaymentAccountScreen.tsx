@@ -30,14 +30,15 @@ const AddPaymentAccountScreen = (props: AddPaymentAccountScreenProps) => {
   const savePressed = async (data: FormData) => {
     setLoading(true)
     
-    if (typeof data.deposit === 'string') data.deposit = parseFloat(data.deposit)
+    const deposit = typeof data.deposit === 'string' ? parseFloat(data.deposit) : data.deposit;
+    const payload = { ...data, deposit };
 
-    logger(`onSavePressed() called with data:`, data)
+    logger(`onSavePressed() called with data:`, payload);
     
     const result = await safeRequest({
       url: `${API_URL}/payment-accounts`,
       method: 'post',
-      data,
+      data: payload,
     })
 
     setLoading(false)
