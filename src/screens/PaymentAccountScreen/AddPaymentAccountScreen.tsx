@@ -65,7 +65,7 @@ const AddPaymentAccountScreen = (props: AddPaymentAccountScreenProps) => {
     return true
   }
 
-  const onSavePressed = async (data: any) => {
+  const onSavePressed = async (data: FormData) => {
     const save = await savePressed(data)
     if (save) navigation.goBack()
   }
